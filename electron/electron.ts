@@ -25,6 +25,7 @@ function createTestWindow() {
     const testWindow = new BrowserWindow({
       width: 600,
       height: 400,
+    //   frame: false,
       webPreferences: {
         preload: path.join(__dirname, 'preload.js'),
         contextIsolation: true,
@@ -34,6 +35,8 @@ function createTestWindow() {
   
     // Load the route for the Test component
     testWindow.loadURL('http://localhost:5555/test');  // This loads the /test route
+
+    testWindow.setMenuBarVisibility(false);
   
     testWindow.on('closed', () => {
       testWindow.destroy();
