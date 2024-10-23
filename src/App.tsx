@@ -1,9 +1,19 @@
 import { Viewer, Entity } from 'resium';
 import { Cartesian3, Color } from 'cesium';
 
+
+
 function App() {
+
+  const openTestWindow = () => {
+    window.electronAPI.openTestWindow();  // Access the exposed API
+  };
+
   return (
     <div style={{ height: '100vh', width: '100vw', position: 'relative' }}>
+      <button onClick={openTestWindow} style={{ position: 'absolute', zIndex: 1000 }}>
+        Open Test Window
+      </button>
       <Viewer full>
         {/* Example entity: a red point on the globe */}
         <Entity
