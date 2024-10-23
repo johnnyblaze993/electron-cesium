@@ -25,6 +25,8 @@ function createTestWindow() {
     const testWindow = new BrowserWindow({
       width: 600,
       height: 400,
+      opacity: 0.8,  
+      alwaysOnTop: true, 
     //   frame: false,
       webPreferences: {
         preload: path.join(__dirname, 'preload.js'),
