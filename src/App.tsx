@@ -9,7 +9,7 @@ function App() {
     window.electronAPI.openTestWindow();  // Access the exposed API
   };
 
-  const position = Cartesian3.fromDegrees(-75.59777, 40.03883, 10);  // Longitude, Latitude, Height
+  const position = Cartesian3.fromDegrees(-86.5861, 34.7304, 0);  // Longitude, Latitude, Height
   const pointGraphics = { pixelSize: 10, color: Color.RED };  // Red point
 
   return (
