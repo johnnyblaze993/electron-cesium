@@ -1,4 +1,4 @@
-import { Viewer, Entity } from 'resium';
+import { Viewer, Entity, EntityDescription } from 'resium';
 import { Cartesian3, Color } from 'cesium';
 
 
@@ -22,9 +22,14 @@ function App() {
         <Entity
           position={position}  // Longitude, Latitude
           name='Red point'
-          description={'Hello, world!'}
           point={pointGraphics}  // Red point
-        />
+        >
+          <EntityDescription>
+            <h1>Hello, world.</h1>
+            <p>This is a red point on the globe.</p>
+          </EntityDescription>
+
+        </Entity>
       </Viewer>
     </div>
   );
