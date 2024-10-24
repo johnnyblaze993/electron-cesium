@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider, Box } from '@mui/material';
+import { Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import RoomIcon from '@mui/icons-material/Room';  // Icon for location/coordinates
 
 const Test: React.FC = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);  // Drawer state
@@ -12,33 +11,18 @@ const Test: React.FC = () => {
     setIsDrawerOpen(open);
   };
 
-  // Contents of the Drawer
+  // Contents of the Drawer with one option: "Add Coordinates"
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <RoomIcon />  {/* Location icon for "Add Coordinates" */}
+            </ListItemIcon>
+            <ListItemText primary="Add Coordinates" />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
