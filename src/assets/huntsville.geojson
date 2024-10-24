@@ -1,0 +1,29 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "name": "Huntsville, AL",
+          "description": "This is the territory of Huntsville, Alabama."
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [-86.6298, 34.7304],  
+              [-86.6398, 34.7050],
+              [-86.6484, 34.6885],
+              [-86.6790, 34.6749],
+              [-86.6844, 34.6833],
+              [-86.6944, 34.7009],
+              [-86.6627, 34.7276],
+              [-86.6492, 34.7336],
+              [-86.6298, 34.7304] 
+            ]
+          ]
+        }
+      }
+    ]
+  }
+  
