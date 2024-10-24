@@ -33,6 +33,9 @@ const AddCoordinate: React.FC = () => {
     console.log('Submitted Coordinates:', coordinates); // Log the coordinates
   };
 
+  //disable button if we have less than 3 coordinates
+    const disableButton = coordinates.length < 3;
+
   return (
     <div>
       <DrawerMenu />
@@ -59,7 +62,7 @@ const AddCoordinate: React.FC = () => {
             Add Another Point
           </Button>
           <br />
-          <Button type="submit" variant="contained" color="primary">
+          <Button type="submit" variant="contained" color="primary" disabled={disableButton}>
             Submit Coordinates
           </Button>
         </form>
