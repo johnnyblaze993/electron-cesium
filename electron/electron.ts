@@ -53,10 +53,10 @@ ipcMain.on('open-test-window', () => {
 });
 
 // Listen for the coordinates sent from Test window
-ipcMain.on('send-coordinates', (_event, coordinates) => {
+ipcMain.on('send-coordinates', (_event, coordinate) => {
   if (mainWindow) {
-    // Send the coordinates to the main window (App.tsx)
-    mainWindow.webContents.send('update-coordinates', coordinates);
+    // Send the single coordinate to the main window (App.tsx)
+    mainWindow.webContents.send('update-coordinates', coordinate);
   }
 });
 
