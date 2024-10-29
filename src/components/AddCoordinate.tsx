@@ -75,14 +75,21 @@ const AddCoordinate: React.FC = () => {
                             InputProps={{ style: { color: '#e0e0e0', backgroundColor: '#333' } }}
                         />
                     </Stack>
-                    <Button type="submit" variant="contained" color="primary" fullWidth sx={{ marginBottom: 3 }}>
+                    <Button type="submit" variant="contained" color="primary" sx={{ marginBottom: 3,
+                    width: '70%', marginLeft: '15%'
+
+                     }}>
                         Add Point
                     </Button>
                 </form>
 
                 {/* Display added coordinates in Material-UI Papers */}
                 <Typography variant="h6" align="center" gutterBottom>
-                    Added Coordinates:
+              {
+                coordinates.length > 0
+                  ? 'Added Coordinates'
+                  : 'No Coordinates Added Yet'
+              }
                 </Typography>
                 <List>
                     {coordinates.map((coord, index) => (
