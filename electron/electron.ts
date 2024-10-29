@@ -8,19 +8,23 @@ function createMainWindow() {
   mainWindow = new BrowserWindow({
     width: 1024,
     height: 768,
+    autoHideMenuBar: true,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),  // Use preload script here
-      contextIsolation: true,  // Enable context isolation for security
-      nodeIntegration: false,  // Disable node integration for security
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
     },
   });
 
-  mainWindow.loadURL('http://localhost:5555');  // Vite dev server
+  mainWindow.maximize();  // Opens the window maximized
+
+  mainWindow.loadURL('http://localhost:5555');
 
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
 }
+
 
 function createTestWindow() {
   testWindow = new BrowserWindow({
