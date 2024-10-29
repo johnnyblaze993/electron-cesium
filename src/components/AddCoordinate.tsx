@@ -54,7 +54,7 @@ const AddCoordinate: React.FC = () => {
                 }}
             >
                 <Typography variant="h4" align="center" gutterBottom>
-                    Add Coordinates
+                    Add Points
                 </Typography>
                 <form onSubmit={handleSubmit}>
                     <Stack spacing={2} direction="row" justifyContent="center" mb={2}>
@@ -79,7 +79,7 @@ const AddCoordinate: React.FC = () => {
                     width: '70%', marginLeft: '15%'
 
                      }}>
-                        Add Point
+                        New Point
                     </Button>
                 </form>
 
@@ -87,8 +87,8 @@ const AddCoordinate: React.FC = () => {
                 <Typography variant="h6" align="center" gutterBottom>
               {
                 coordinates.length > 0
-                  ? 'Added Coordinates'
-                  : 'No Coordinates Added Yet'
+                  ? 'Added Points'
+                  : 'No Points Added Yet'
               }
                 </Typography>
                 <List>
