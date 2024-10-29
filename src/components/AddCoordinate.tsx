@@ -36,8 +36,7 @@ const AddCoordinate: React.FC = () => {
                 alignItems: 'center',
                 height: '100vh',
                 width: '100vw',
-                backgroundColor: '#121212',
-                padding: 3,
+                // backgroundColor: '#121212',
                 overflow: 'hidden',
             }}
         >
