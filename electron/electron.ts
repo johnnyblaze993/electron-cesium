@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 
 let mainWindow: BrowserWindow | null = null;
-let testWindow: BrowserWindow | null = null;
+let testWindows: BrowserWindow[] = [];  // Array to store references to all test windows
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
@@ -16,22 +16,28 @@ function createMainWindow() {
     },
   });
 
-  mainWindow.maximize();  // Opens the window maximized
-
+  mainWindow.maximize();
   mainWindow.loadURL('http://localhost:5555');
 
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+
+  // Close all test windows when the main window is closed
+  mainWindow.on('close', () => {
+    testWindows.forEach((win) => {
+      if (!win.isDestroyed()) win.close();
+    });
+    testWindows = [];  // Clear the array after closing all windows
+  });
 }
 
-
 function createTestWindow() {
-  testWindow = new BrowserWindow({
+  const testWindow = new BrowserWindow({
     width: 600,
     height: 400,
-    opacity: 0.8,  // Opacity to indicate secondary window
-    alwaysOnTop: true,  // Keep the Test window always on top
+    opacity: 0.8,
+    alwaysOnTop: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -39,30 +45,30 @@ function createTestWindow() {
     },
   });
 
-  // Load the route for the Test component
-  testWindow.loadURL('http://localhost:5555/test');  // This loads the /test route
-
-  testWindow.setMenuBarVisibility(false);  // Hide the menu bar
+  testWindow.loadURL('http://localhost:5555/test');
+  testWindow.setMenuBarVisibility(false);
 
   testWindow.on('closed', () => {
-    testWindow = null;
+    testWindows = testWindows.filter((win) => win !== testWindow);
   });
+
+  testWindows.push(testWindow);  // Add the new test window to the array
 }
 
 app.whenReady().then(createMainWindow);
 
-// Listen for the IPC event to open a new window
+// IPC to open a new test window
 ipcMain.on('open-test-window', () => {
   createTestWindow();
 });
 
-// Listen for the coordinates sent from Test window
 ipcMain.on('send-coordinates', (_event, coordinate) => {
   if (mainWindow) {
     // Send the single coordinate to the main window (App.tsx)
     mainWindow.webContents.send('update-coordinates', coordinate);
   }
 });
+
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
