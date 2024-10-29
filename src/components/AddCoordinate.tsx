@@ -1,7 +1,7 @@
 //@ts-nocheck
 import React, { useState } from 'react';
 import DrawerMenu from './DrawerMenu';
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, Button, Box, List, ListItem, ListItemText, Typography, Paper, Stack } from '@mui/material';
 import { useCoordinateStore } from '../stores/coordinateStore';
 
 interface Coordinate {
@@ -12,8 +12,8 @@ interface Coordinate {
 const AddCoordinate: React.FC = () => {
     const [coordinate, setCoordinate] = useState<Coordinate>({ longitude: '', latitude: '' });
     const addCoordinate = useCoordinateStore((state) => state.addCoordinate);
+    const coordinates = useCoordinateStore((state) => state.coordinates);
 
-    // Handle input changes for longitude and latitude
     const handleInputChange = (field: string, value: string) => {
         setCoordinate({
             ...coordinate,
@@ -21,51 +21,93 @@ const AddCoordinate: React.FC = () => {
         });
     };
 
-    // Handle form submission (add the point directly)
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        
-        // Add the coordinate to Zustand store
         addCoordinate(coordinate);
-        
-        // Send the single coordinate (not an array) to the Electron main process
         window.electronAPI.sendCoordinates(coordinate);
-
-        // Reset the form for the next point
         setCoordinate({ longitude: '', latitude: '' });
     };
 
     return (
-        <div>
+        <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+                width: '100vw',
+                backgroundColor: '#121212',
+                padding: 3,
+                overflow: 'hidden',
+            }}
+        >
             <DrawerMenu />
 
-            <Box sx={{ padding: '20px', textAlign: 'center' }}>
-                <h1>Add Coordinates</h1>
+            <Paper
+                sx={{
+                    width: '100%',
+                    maxWidth: 600,
+                    padding: 4,
+                    borderRadius: 2,
+                    boxShadow: 3,
+                    backgroundColor: '#1e1e1e',
+                    color: '#e0e0e0',
+                }}
+            >
+                <Typography variant="h4" align="center" gutterBottom>
+                    Add Coordinates
+                </Typography>
                 <form onSubmit={handleSubmit}>
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, marginBottom: 2 }}>
+                    <Stack spacing={2} direction="row" justifyContent="center" mb={2}>
                         <TextField
                             label="Longitude"
                             value={coordinate.longitude}
                             onChange={(e) => handleInputChange('longitude', e.target.value)}
                             required
-                            InputLabelProps={{ style: { color: '#ffffff' } }}
-                            InputProps={{ style: { color: '#ffffff', backgroundColor: '#333' } }}
+                            InputLabelProps={{ style: { color: '#b0b0b0' } }}
+                            InputProps={{ style: { color: '#e0e0e0', backgroundColor: '#333' } }}
                         />
                         <TextField
                             label="Latitude"
                             value={coordinate.latitude}
                             onChange={(e) => handleInputChange('latitude', e.target.value)}
                             required
-                            InputLabelProps={{ style: { color: '#ffffff' } }}
-                            InputProps={{ style: { color: '#ffffff', backgroundColor: '#333' } }}
+                            InputLabelProps={{ style: { color: '#b0b0b0' } }}
+                            InputProps={{ style: { color: '#e0e0e0', backgroundColor: '#333' } }}
                         />
-                    </Box>
-                    <Button type="submit" variant="contained" color="primary">
+                    </Stack>
+                    <Button type="submit" variant="contained" color="primary" fullWidth sx={{ marginBottom: 3 }}>
                         Add Point
                     </Button>
                 </form>
-            </Box>
-        </div>
+
+                {/* Display added coordinates in Material-UI Papers */}
+                <Typography variant="h6" align="center" gutterBottom>
+                    Added Coordinates:
+                </Typography>
+                <List>
+                    {coordinates.map((coord, index) => (
+                        <ListItem key={index} disablePadding>
+                            <Paper
+                                elevation={1}
+                                sx={{
+                                    width: '100%',
+                                    padding: 2,
+                                    marginBottom: 1,
+                                    backgroundColor: '#333',
+                                    color: '#e0e0e0',
+                                }}
+                            >
+                                <ListItemText
+                                    primary={`Longitude: ${coord.longitude}, Latitude: ${coord.latitude}`}
+                                    primaryTypographyProps={{ align: 'center' }}
+                                />
+                            </Paper>
+                        </ListItem>
+                    ))}
+                </List>
+            </Paper>
+        </Box>
     );
 };
 
