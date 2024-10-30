@@ -24,13 +24,13 @@ function App() {
       try {
         const osmBuildings = await createOsmBuildingsAsync({
           style: new Cesium3DTileStyle({
-            color: {
-              conditions: [
-                ["${feature['building']} === 'hospital'", "color('#0000FF')"],
-                ["${feature['building']} === 'school'", "color('#00FF00')"],
-                [true, "color('#ffffff')"]
-              ]
-            }
+            // color: {
+            //   conditions: [
+            //     ["${feature['building']} === 'hospital'", "color('#0000FF')"],
+            //     ["${feature['building']} === 'school'", "color('#00FF00')"],
+            //     [true, "color('#ffffff')"]
+            //   ]
+            // }
           }),
           showOutline: true,
         });
