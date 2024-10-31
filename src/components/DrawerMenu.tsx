@@ -43,12 +43,17 @@ const DrawerMenu: React.FC = () => {
     }));
   };
 
+  const navigateAndClose = (path: string, closeDrawer: boolean = true) => {
+    navigate(path);
+    if (closeDrawer) setIsDrawerOpen(false);
+  };
+
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation">
       <List>
         {/* Test Page Link */}
         <ListItem disablePadding>
-          <ListItemButton onClick={() => { navigate("/test"); setIsDrawerOpen(false); }}>
+          <ListItemButton onClick={() => navigateAndClose("/test")}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -58,7 +63,7 @@ const DrawerMenu: React.FC = () => {
 
         {/* Add Coordinate Link */}
         <ListItem disablePadding>
-          <ListItemButton onClick={() => { navigate("/add-coordinate"); setIsDrawerOpen(false); }}>
+          <ListItemButton onClick={() => navigateAndClose("/add-coordinate")}>
             <ListItemIcon>
               <RoomIcon />
             </ListItemIcon>
@@ -90,12 +95,12 @@ const DrawerMenu: React.FC = () => {
             <Collapse in={openMenuItems.sensorCoverages} timeout="auto" unmountOnExit>
               <List component="div" disablePadding sx={{ pl: 4 }}>
                 <ListItem disablePadding>
-                  <ListItemButton onClick={() => { /* Navigate to Polar Ground Coverage */ }}>
+                  <ListItemButton onClick={() => navigateAndClose("/sensors/sensor-coverages/polar-ground-coverage", false)}>
                     <ListItemText primary="Polar Ground Coverage" />
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                  <ListItemButton onClick={() => { /* Navigate to Geometric Solid */ }}>
+                  <ListItemButton onClick={() => navigateAndClose("/sensors/sensor-coverages/geometric-solid", false)}>
                     <ListItemText primary="Geometric Solid" />
                   </ListItemButton>
                 </ListItem>
@@ -117,7 +122,7 @@ const DrawerMenu: React.FC = () => {
         <Collapse in={openMenuItems.weapons} timeout="auto" unmountOnExit>
           <List component="div" disablePadding sx={{ pl: 4 }}>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => { /* Navigate to Weapon Specific Graphics */ }}>
+              <ListItemButton onClick={() => navigateAndClose("/weapons/weapon-specific-graphics", false)}>
                 <ListItemText primary="Weapon Specific Graphics" />
               </ListItemButton>
             </ListItem>
@@ -137,27 +142,27 @@ const DrawerMenu: React.FC = () => {
         <Collapse in={openMenuItems.polygonalAreas} timeout="auto" unmountOnExit>
           <List component="div" disablePadding sx={{ pl: 4 }}>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => { /* Navigate to FOB Boundaries */ }}>
+              <ListItemButton onClick={() => navigateAndClose("/polygonal-areas/fob-boundaries", false)}>
                 <ListItemText primary="FOB Boundaries" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => { /* Navigate to Protected Areas */ }}>
+              <ListItemButton onClick={() => navigateAndClose("/polygonal-areas/protected-areas", false)}>
                 <ListItemText primary="Protected Areas" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => { /* Navigate to Allowable Areas */ }}>
+              <ListItemButton onClick={() => navigateAndClose("/polygonal-areas/allowable-areas", false)}>
                 <ListItemText primary="Allowable Areas" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => { /* Navigate to NAIs */ }}>
+              <ListItemButton onClick={() => navigateAndClose("/polygonal-areas/nias", false)}>
                 <ListItemText primary="NAIs" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => { /* Navigate to Ignored Regions */ }}>
+              <ListItemButton onClick={() => navigateAndClose("/polygonal-areas/ignored-regions", false)}>
                 <ListItemText primary="Ignored Regions" />
               </ListItemButton>
             </ListItem>
@@ -177,17 +182,17 @@ const DrawerMenu: React.FC = () => {
         <Collapse in={openMenuItems.threats} timeout="auto" unmountOnExit>
           <List component="div" disablePadding sx={{ pl: 4 }}>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => { /* Navigate to Threat Specific Graphics */ }}>
+              <ListItemButton onClick={() => navigateAndClose("/threats/threat-specific-graphics", false)}>
                 <ListItemText primary="Threat Specific Graphics" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => { /* Navigate to Flight Profiles */ }}>
+              <ListItemButton onClick={() => navigateAndClose("/threats/flight-profiles", false)}>
                 <ListItemText primary="Flight Profiles" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => { /* Navigate to Impact Areas */ }}>
+              <ListItemButton onClick={() => navigateAndClose("/threats/impact-areas", false)}>
                 <ListItemText primary="Impact Areas" />
               </ListItemButton>
             </ListItem>
