@@ -1,8 +1,13 @@
 // import React from 'react'
 
+import DrawerMenu from "../../components/DrawerMenu"
+
 const FlightProfiles = () => {
   return (
-    <div>FlightProfiles</div>
+    <div>
+      <DrawerMenu />
+      <div>FlightProfiles</div>
+    </div>
   )
 }
 

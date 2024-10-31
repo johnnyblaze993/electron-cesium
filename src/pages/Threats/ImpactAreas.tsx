@@ -1,8 +1,13 @@
 // import React from 'react'
 
+import DrawerMenu from "../../components/DrawerMenu"
+
 const ImpactAreas = () => {
   return (
-    <div>ImpactAreas</div>
+    <div>
+      <DrawerMenu />
+      <div>ImpactAreas</div>
+    </div>
   )
 }
 

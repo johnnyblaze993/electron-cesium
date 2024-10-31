@@ -1,8 +1,13 @@
 // import React from 'react'
 
+import DrawerMenu from "../../components/DrawerMenu"
+
 const ThreatSpecificGraphics = () => {
   return (
-    <div>ThreatSpecificGraphics</div>
+    <div>
+      <DrawerMenu />
+      <div>ThreatSpecificGraphics</div>
+    </div>
   )
 }
 

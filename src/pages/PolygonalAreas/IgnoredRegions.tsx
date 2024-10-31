@@ -1,8 +1,13 @@
 // import React from 'react'
 
+import DrawerMenu from "../../components/DrawerMenu"
+
 const IgnoredRegions = () => {
   return (
-    <div>IgnoredRegions</div>
+    <div>
+      <DrawerMenu />
+      <div>IgnoredRegions</div>
+    </div>
   )
 }
 

@@ -1,8 +1,13 @@
 // import React from 'react'
 
+import DrawerMenu from "../../../components/DrawerMenu"
+
 const PolarGroundCoverage = () => {
   return (
-    <div>PolarGroundCoverage</div>
+    <div>
+      <DrawerMenu />
+      <div>PolarGroundCoverage</div>
+    </div>
   )
 }
 
