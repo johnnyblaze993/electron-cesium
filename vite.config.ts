@@ -4,17 +4,20 @@ import cesium from 'vite-plugin-cesium';
 
 export default defineConfig({
   plugins: [react(), cesium()],
+  base: './',  // Ensures relative paths for assets
   server: {
-    port: 5555
+    port: 5555,
   },
   build: {
-    assetsDir: 'assets',
     rollupOptions: {
       output: {
-        entryFileNames: `assets/[name].js`,
-        chunkFileNames: `assets/[name].js`,
-        assetFileNames: `assets/[name].[ext]`
-      }
-    }
-  }
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.names && assetInfo.names[0] === 'Cesium') {
+            return 'assets/Cesium/[name][extname]';
+          }
+          return 'assets/[name][extname]';
+        },
+      },
+    },
+  },
 });
