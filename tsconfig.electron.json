@@ -1,15 +1,12 @@
 {
-    "compilerOptions": {
-      "target": "ES2020",
-      "module": "CommonJS",      // Important: Outputs CommonJS code
-      "outDir": "dist-electron", // Output to dist-electron
-      "strict": true,
-      "esModuleInterop": true,
-      "moduleResolution": "node",
-      "resolveJsonModule": true,
-      "skipLibCheck": true
-    },
-    "include": ["electron/**/*.ts"], // Include electron files
-    "exclude": ["node_modules"]
-  }
-  
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "outDir": "./dist-electron",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "sourceMap": true
+  },
+  "include": ["electron/**/*.ts"]
+}

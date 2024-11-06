@@ -2,15 +2,15 @@
   "name": "electron-cesium",
   "private": true,
   "version": "0.0.0",
+  "main": "dist-electron/electron.js",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "start": "vite dev",
+    "clean": "rimraf dist dist-electron",
+    "dev": "vite", 
+    "build": "npm run clean && tsc -b && vite build", 
     "build-electron": "tsc --project tsconfig.electron.json",
     "electron": "npm run build-electron && electron dist-electron/electron.js",
-    "electron-dev": "concurrently \"npm run dev\" \"wait-on http://localhost:5555 && npm run electron\""
+    "electron-dev": "concurrently \"npm run dev\" \"wait-on http://localhost:5555 && npm run electron\"",
+    "electron:build": "electron-builder" 
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -40,5 +40,17 @@
     "vite": "^5.4.8",
     "vite-plugin-cesium": "^1.2.23",
     "wait-on": "^8.0.1"
+  },
+  "build": {
+  "appId": "com.example.electroncesium",
+  "productName": "ElectronCesiumApp",
+  "files": [
+    "dist/**/*",          
+    "dist-electron/**/*",    
+    "package.json"
+  ],
+  "directories": {
+    "buildResources": "assets"
   }
+}
 }

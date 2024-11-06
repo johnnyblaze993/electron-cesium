@@ -1,4 +1,6 @@
 //@ts-nocheck
+(window as any).CESIUM_BASE_URL = './cesium';
+
 
 import { Viewer, Entity, PolygonGraphics, PointGraphics, Cesium3DTileset } from 'resium';
 import { Cartesian3, Color, createWorldTerrainAsync, PolygonHierarchy, Ion, createOsmBuildingsAsync, Cesium3DTileStyle, IonResource } from 'cesium';
@@ -49,9 +51,13 @@ function App() {
 
   // Listen for updates from Electron (when new coordinates are added)
   useEffect(() => {
-    window.electronAPI.onCoordinatesUpdate((newCoordinate) => {
-      addCoordinate(newCoordinate);
-    });
+    if (window.electronAPI?.onCoordinatesUpdate) {
+      window.electronAPI.onCoordinatesUpdate((newCoordinate) => {
+        addCoordinate(newCoordinate);
+      });
+    } else {
+      console.warn('electronAPI or onCoordinatesUpdate is not available');
+    }
   }, [addCoordinate]);
 
   // Fly to the last added coordinate after a new one is added
@@ -78,7 +84,16 @@ function App() {
   return (
     <div style={{ height: '100vh', width: '100vw', position: 'relative' }}>
       {/* Button to navigate to Test.tsx */}
-      <button onClick={() => window.electronAPI.openTestWindow()} style={{ position: 'absolute', zIndex: 1000 }}>
+      <button
+        onClick={() => {
+          if (window.electronAPI?.openTestWindow) {
+            window.electronAPI.openTestWindow();
+          } else {
+            console.warn("electronAPI or openTestWindow is not available");
+          }
+        }}
+        style={{ position: 'absolute', zIndex: 1000 }}
+      >
         Open Test Window
       </button>
 
