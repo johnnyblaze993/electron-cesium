@@ -1,35 +1,35 @@
+// electron/electron.ts
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 
-console.log("Environment:", process.env.NODE_ENV);
-
-
 let mainWindow: BrowserWindow | null = null;
-let testWindows: BrowserWindow[] = [];  // Array to store references to all test windows
+let testWindows: BrowserWindow[] = []; // Array to store references to all test windows
+
+function getPreloadPath() {
+  return path.join(app.getAppPath(), 'build', 'electron', 'preload.js');
+}
+
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
-    width: 1024,
-    height: 768,
-    autoHideMenuBar: false,
+    width: 800,
+    height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: getPreloadPath(),
       contextIsolation: true,
       nodeIntegration: false,
     },
   });
 
-  mainWindow.maximize();
-
-  if (mainWindow) mainWindow.webContents.openDevTools();
-
-  if (process.env.NODE_ENV === 'development') {
-    // In development, load from localhost
-    mainWindow.loadURL('http://localhost:5555');
-    mainWindow.webContents.openDevTools();
+  if (app.isPackaged) {
+    // Production: Load `index.html` and navigate to `#/`
+    mainWindow.loadFile(path.join(app.getAppPath(), 'dist', 'index.html')).then(() => {
+      mainWindow?.webContents.executeJavaScript(`window.location.hash = "/";`);
+    });
   } else {
-    // In production, load from the local file
-    mainWindow.loadFile(path.join(app.getAppPath(), 'dist', 'index.html'));
+    // Development: Load the Vite dev server URL with `#/`
+    mainWindow.loadURL('http://localhost:5173/#/');
+    mainWindow.webContents.openDevTools(); // Opens DevTools for debugging
   }
 
   mainWindow.on('closed', () => {
@@ -41,7 +41,14 @@ function createMainWindow() {
     testWindows.forEach((win) => {
       if (!win.isDestroyed()) win.close();
     });
-    testWindows = [];  // Clear the array after closing all windows
+    testWindows = []; // Clear the array after closing all windows
+  });
+
+  mainWindow.webContents.on('did-finish-load', () => {
+    console.log("Content loaded in Electron");
+  });
+  mainWindow.webContents.on('did-fail-load', (_event, errorCode, errorDescription) => {
+    console.error("Failed to load:", errorCode, errorDescription);
   });
 }
 
@@ -52,35 +59,37 @@ function createTestWindow() {
     opacity: 0.8,
     alwaysOnTop: true,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: getPreloadPath(),
       contextIsolation: true,
       nodeIntegration: false,
     },
   });
 
-   if (process.env.NODE_ENV === 'development') {
-    // Load from localhost in development mode
-    testWindow.loadURL('http://localhost:5555/test');
+  if (app.isPackaged) {
+    // Production: Load `index.html` and navigate to `#/test`
+    testWindow.loadFile(path.join(app.getAppPath(), 'dist', 'index.html')).then(() => {
+      testWindow?.webContents.executeJavaScript(`window.location.hash = "/test";`);
+    });
   } else {
-    // Load from local file in production mode
-    testWindow.loadFile(path.join(app.getAppPath(), 'dist', 'test.html'));
+    // Development: Load the Vite dev server URL with `#/test`
+    testWindow.loadURL('http://localhost:5173/#/test');
   }
+
   testWindow.setMenuBarVisibility(false);
 
   testWindow.on('closed', () => {
     testWindows = testWindows.filter((win) => win !== testWindow);
   });
 
-  testWindows.push(testWindow);  // Add the new test window to the array
+  testWindows.push(testWindow); // Add the new test window to the array
 }
 
-app.whenReady().then(createMainWindow);
-
-// IPC to open a new test window
+// IPC listener for opening the test window
 ipcMain.on('open-test-window', () => {
   createTestWindow();
 });
 
+// IPC listener for sending coordinates to the main window
 ipcMain.on('send-coordinates', (_event, coordinate) => {
   if (mainWindow) {
     // Send the single coordinate to the main window (App.tsx)
@@ -88,6 +97,8 @@ ipcMain.on('send-coordinates', (_event, coordinate) => {
   }
 });
 
+// Create the main window when the app is ready
+app.whenReady().then(createMainWindow);
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

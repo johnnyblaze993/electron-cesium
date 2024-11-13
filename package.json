@@ -2,14 +2,13 @@
   "name": "electron-cesium",
   "private": true,
   "version": "0.0.0",
-  "main": "dist-electron/electron.js",
+  "main": "build/electron/electron.js",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "build-electron": "tsc --project tsconfig.electron.json",
-    "electron": "npm run build-electron && electron dist-electron/electron.js",
-    "electron-dev": "cross-env NODE_ENV=development concurrently \"vite\" \"wait-on http://localhost:5555 && electron dist-electron/electron.js\"",
-    "electron:build": "electron-builder"
+    "clean": "rimraf build dist",
+    "start": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "build": "npm run clean && vite build && tsc",
+    "electron:build": "npm run build && electron-builder",
+    "dev": "vite"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -47,7 +46,7 @@
     "asar": false,
     "files": [
       "dist/**/*",
-      "dist-electron/**/*",
+      "build/**/*",
       "package.json"
     ],
     "directories": {

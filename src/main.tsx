@@ -1,7 +1,7 @@
 // src/main.tsx
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import App from './App.tsx';
 import Test from './components/Test.tsx';
 import AddCoordinate from './components/AddCoordinate.tsx';
