@@ -1,12 +1,10 @@
 # Run app on electron
-  ## Build Electron:
-  - npm run build (creates dist)
-  - npm run build-electron (creates dist-electron)
-  - npm run electron:build (packages the all using dist & dist-electron)
+  ## Build Electron prod:
+  - npm run build (creates dist and build)
+  - npm run electron:build (packages the all using dist & build)
   ## Run Electron in Development: 
   - npm run build (creates dist)
-  - npm run build-electron (creates dist-electron)
-  - npm run electron-dev (this is the demo environment)
+  - npm run start (opens electron app and another version in the browser)
 
 # Run app without electron
 - npm run dev (electron API does not work in this environment)
