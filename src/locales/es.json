@@ -1,0 +1,8 @@
+{
+  "allowableAreas": "Áreas Permitidas",
+  "fobBoundaries": "Límites de FOB",
+  "ignoredRegions": "Regiones Ignoradas",
+  "nias": "NIAs",
+  "protectedAreas": "Áreas Protegidas",
+  "openTestWindow": "Abrir Ventana de Prueba"
+}

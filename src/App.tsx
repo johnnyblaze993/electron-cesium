@@ -5,13 +5,15 @@
 import { Viewer, Entity, PolygonGraphics, PointGraphics, Cesium3DTileset } from 'resium';
 import { Cartesian3, Color, createWorldTerrainAsync, PolygonHierarchy, Ion, createOsmBuildingsAsync, Cesium3DTileStyle, IonResource } from 'cesium';
 import { useCoordinateStore } from './stores/coordinateStore';
-import { useNavigate } from 'react-router-dom';  
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
-
+import LanguageSwitcher from "./components/LanguageSwitcher";
+import { useTranslation } from 'react-i18next';
 // Set your Cesium Ion Access Token
 Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2M2I0NDlhNi0xM2ZmLTQzODEtOWQ3OC03OTg3NDU3MTBlODUiLCJpZCI6MjUwNTMwLCJpYXQiOjE3Mjk3NzgzNzR9.kb003ews9fyouXCJthtNxLDIYMukHobYM60UOiv5FpI';
 
 function App() {
+  const { t } = useTranslation();
   const coordinates = useCoordinateStore((state) => state.coordinates) || [];
   const addCoordinate = useCoordinateStore((state) => state.addCoordinate);
   const navigate = useNavigate();
@@ -36,7 +38,7 @@ function App() {
           }),
           showOutline: true,
         });
-        
+
         // Add to the scene once loaded
         if (viewerRef.current?.cesiumElement) {
           viewerRef.current.cesiumElement.scene.primitives.add(osmBuildings);
@@ -45,7 +47,7 @@ function App() {
         console.error("Error loading OSM buildings:", error);
       }
     };
-    
+
     loadOsmBuildings();
   }, []);
 
@@ -82,8 +84,19 @@ function App() {
     : [];
 
   return (
-    <div style={{ height: '100vh', width: '100vw', position: 'relative' }}>
-      {/* Button to navigate to Test.tsx */}
+    <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
+    {/* Floating UI Controls */}
+    <div
+      style={{
+        position: "absolute",
+        top: "10px",
+        left: "10px",
+        display: "flex",
+        gap: "10px",
+        zIndex: 1000, // Ensure it appears above Cesium
+      }}
+    >
+      <LanguageSwitcher />
       <button
         onClick={() => {
           if (window.electronAPI?.openTestWindow) {
@@ -92,31 +105,42 @@ function App() {
             console.warn("electronAPI or openTestWindow is not available");
           }
         }}
-        style={{ position: 'absolute', zIndex: 1000 }}
+        style={{
+          padding: "5px 10px",
+          border: "none",
+          borderRadius: "4px",
+          backgroundColor: "#007bff",
+          color: "#fff",
+          cursor: "pointer",
+        }}
       >
-        Open Test Window
+        {t("openTestWindow")}
       </button>
-
-      <Viewer full terrainProvider={terrainProvider} ref={viewerRef}>
-        {/* Plot points dynamically */}
-        {polygonPositions.map((position, index) => (
-          <Entity key={index} position={position}>
-            <PointGraphics pixelSize={10} color={Color.RED} />
-          </Entity>
-        ))}
-
-        {/* Draw polygon if we have at least 3 points */}
-        {polygonPositions.length >= 3 && (
-          <Entity name="Polygon">
-            <PolygonGraphics
-              hierarchy={new PolygonHierarchy(polygonPositions)}
-              material={Color.RED.withAlpha(0.5)}
-              outline={false}
-            />
-          </Entity>
-        )}
-      </Viewer>
     </div>
+
+    {/* Cesium Viewer */}
+    <Viewer
+      full
+      terrainProvider={terrainProvider}
+      ref={viewerRef}
+      style={{ height: "100%", width: "100%" }}
+    >
+      {polygonPositions.map((position, index) => (
+        <Entity key={index} position={position}>
+          <PointGraphics pixelSize={10} color={Color.RED} />
+        </Entity>
+      ))}
+      {polygonPositions.length >= 3 && (
+        <Entity name="Polygon">
+          <PolygonGraphics
+            hierarchy={new PolygonHierarchy(polygonPositions)}
+            material={Color.RED.withAlpha(0.5)}
+            outline={false}
+          />
+        </Entity>
+      )}
+    </Viewer>
+  </div>
   );
 }
 

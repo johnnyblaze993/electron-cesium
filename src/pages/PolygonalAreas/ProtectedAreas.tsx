@@ -1,12 +1,13 @@
 import React from 'react'
-
 import DrawerMenu from "../../components/DrawerMenu"
+import { useTranslation } from 'react-i18next'
 
 const ProtectedAreas = () => {
+  const { t } = useTranslation()
   return (
     <div>
       <DrawerMenu />
-    <div>ProtectedAreas</div>
+      <div>{t("protectedAreas")}</div>
     </div>
   )
 }
