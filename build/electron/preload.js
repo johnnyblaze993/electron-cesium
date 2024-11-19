@@ -6,4 +6,6 @@ electron_1.contextBridge.exposeInMainWorld('electronAPI', {
     openTestWindow: () => electron_1.ipcRenderer.send('open-test-window'),
     sendCoordinates: (coordinates) => electron_1.ipcRenderer.send('send-coordinates', coordinates),
     onCoordinatesUpdate: (callback) => electron_1.ipcRenderer.on('update-coordinates', (_event, data) => callback(data)),
+    setLanguage: (language) => electron_1.ipcRenderer.send('set-language', language),
+    onLanguageUpdate: (callback) => electron_1.ipcRenderer.on('update-language', (_event, language) => callback(language)),
 });

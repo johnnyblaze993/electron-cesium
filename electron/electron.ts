@@ -1,6 +1,7 @@
 // electron/electron.ts
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
+import i18n from 'i18next';
 
 let mainWindow: BrowserWindow | null = null;
 let testWindows: BrowserWindow[] = []; // Array to store references to all test windows
@@ -65,6 +66,12 @@ function createTestWindow() {
     },
   });
 
+    // Load content and pass language after loading
+    const initialLanguage = i18n.language; // Capture the initial language
+    testWindow.webContents.on('did-finish-load', () => {
+      testWindow.webContents.send('update-language', initialLanguage);
+    });
+
   if (app.isPackaged) {
     // Production: Load `index.html` and navigate to `#/test`
     testWindow.loadFile(path.join(app.getAppPath(), 'dist', 'index.html')).then(() => {
@@ -95,6 +102,15 @@ ipcMain.on('send-coordinates', (_event, coordinate) => {
     // Send the single coordinate to the main window (App.tsx)
     mainWindow.webContents.send('update-coordinates', coordinate);
   }
+});
+
+ipcMain.on('set-language', (_event, language) => {
+  // When language is updated in main window, propagate to test windows
+  testWindows.forEach((win) => {
+    if (win && !win.isDestroyed()) {
+      win.webContents.send('update-language', language);
+    }
+  });
 });
 
 // Create the main window when the app is ready

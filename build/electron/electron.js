@@ -22,10 +22,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 // electron/electron.ts
 const electron_1 = require("electron");
 const path = __importStar(require("path"));
+const i18next_1 = __importDefault(require("i18next"));
 let mainWindow = null;
 let testWindows = []; // Array to store references to all test windows
 function getPreloadPath() {
@@ -82,6 +86,11 @@ function createTestWindow() {
             nodeIntegration: false,
         },
     });
+    // Load content and pass language after loading
+    const initialLanguage = i18next_1.default.language; // Capture the initial language
+    testWindow.webContents.on('did-finish-load', () => {
+        testWindow.webContents.send('update-language', initialLanguage);
+    });
     if (electron_1.app.isPackaged) {
         // Production: Load `index.html` and navigate to `#/test`
         testWindow.loadFile(path.join(electron_1.app.getAppPath(), 'dist', 'index.html')).then(() => {
@@ -108,6 +117,14 @@ electron_1.ipcMain.on('send-coordinates', (_event, coordinate) => {
         // Send the single coordinate to the main window (App.tsx)
         mainWindow.webContents.send('update-coordinates', coordinate);
     }
+});
+electron_1.ipcMain.on('set-language', (_event, language) => {
+    // When language is updated in main window, propagate to test windows
+    testWindows.forEach((win) => {
+        if (win && !win.isDestroyed()) {
+            win.webContents.send('update-language', language);
+        }
+    });
 });
 // Create the main window when the app is ready
 electron_1.app.whenReady().then(createMainWindow);

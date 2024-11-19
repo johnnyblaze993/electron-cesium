@@ -1,6 +1,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
+declare global {
+  interface Window {
+    electronAPI?: {
+      setLanguage: (language: string) => void;
+    };
+  }
+}
+
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
 
@@ -8,6 +16,9 @@ const LanguageSwitcher = () => {
   const changeLanguage = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedLanguage = event.target.value;
     i18n.changeLanguage(selectedLanguage);
+    if (window.electronAPI?.setLanguage) {
+      window.electronAPI.setLanguage(selectedLanguage);
+    }
   };
 
   return (
