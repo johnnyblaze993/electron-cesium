@@ -1,16 +1,15 @@
 import React from 'react'
+import DrawerMenu from "../../components/DrawerMenu"
 import { useTranslation } from 'react-i18next'
 
-import DrawerMenu from "../../components/DrawerMenu"
-
-const FlightProfiles = () => {
+const WeaponSpecificGraphics = () => {
   const { t } = useTranslation()
   return (
     <div>
       <DrawerMenu />
-      <div>{t('flightProfiles')}</div>
+      <div>{t("weaponSpecificGraphics")}</div>
     </div>
   )
 }
 
-export default FlightProfiles
+export default WeaponSpecificGraphics

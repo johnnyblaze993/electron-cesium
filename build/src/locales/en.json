@@ -4,5 +4,21 @@
     "ignoredRegions": "Ignored Regions",
     "nias": "NIAs",
     "protectedAreas": "Protected Areas",
-    "openTestWindow": "Open Test Window"
+    "openTestWindow": "Open Test Window",
+    "geometricSolid": "Geometric Solid",
+    "polarGroundCoverage": "Polar Ground Coverage",
+    "flightProfiles": "Flight Profiles",
+    "impactAreas": "Impact Areas",
+    "threatSpecificGraphics": "Threat Specific Graphics",
+    "weaponSpecificGraphics": "Weapon Specific Graphics",
+    "addPoints": "Add Points",
+    "newPoint": "New Point",
+    "testPage": "Test Page",
+    "thisIsTheTestCompWithDrawer": "This is the Test Comp with Drawer",
+    "sensors": "Sensors",
+    "sensorCoverages": "Sensor Coverages",
+    "polygonalAreas": "Polygonal Areas",
+    "weapons": "Weapons",
+    "threats": "Threats",
+    "addCoordinates": "Add Coordinates"
 }

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import DrawerMenu from './DrawerMenu';
 import { TextField, Button, Box, List, ListItem, ListItemText, Typography, Paper, Stack } from '@mui/material';
 import { useCoordinateStore } from '../stores/coordinateStore';
+import { useTranslation } from 'react-i18next';
 
 interface Coordinate {
     longitude: string;
@@ -10,6 +11,7 @@ interface Coordinate {
 }
 
 const AddCoordinate: React.FC = () => {
+    const { t } = useTranslation();
     const [coordinate, setCoordinate] = useState<Coordinate>({ longitude: '', latitude: '' });
     const addCoordinate = useCoordinateStore((state) => state.addCoordinate);
     const coordinates = useCoordinateStore((state) => state.coordinates);
@@ -54,7 +56,7 @@ const AddCoordinate: React.FC = () => {
                 }}
             >
                 <Typography variant="h4" align="center" gutterBottom>
-                    Add Points
+                    {t('addPoints')}
                 </Typography>
                 <form onSubmit={handleSubmit}>
                     <Stack spacing={2} direction="row" justifyContent="center" mb={2}>
@@ -75,11 +77,8 @@ const AddCoordinate: React.FC = () => {
                             InputProps={{ style: { color: '#e0e0e0', backgroundColor: '#333' } }}
                         />
                     </Stack>
-                    <Button type="submit" variant="contained" color="primary" sx={{ marginBottom: 3,
-                    width: '70%', marginLeft: '15%'
-
-                     }}>
-                        New Point
+                    <Button type="submit" variant="contained" color="primary" sx={{ marginBottom: 3 }}>
+                        {t('newPoint')}
                     </Button>
                 </form>
 

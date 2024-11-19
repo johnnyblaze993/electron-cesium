@@ -13,7 +13,7 @@ import ProtectedAreas from "./pages/PolygonalAreas/ProtectedAreas.tsx";
 import FlightProfiles from "./pages/Threats/FlightProfiles.tsx";
 import ImpactAreas from "./pages/Threats/ImpactAreas.tsx";
 import ThreatSpecificGraphics from "./pages/Threats/ThreatSpecificGraphics.tsx";
-import WeaponSpecificGraphics from "./pages/Weapons/WeaponSpecificPraphics.tsx";
+import WeaponSpecificGraphics from "./pages/Weapons/WeaponSpecificGraphics.tsx";
 import GeometricSolid from "./pages/Sensors/SensorCoverages/GeometricSolid.tsx";
 import PolarGroundCoverage from "./pages/Sensors/SensorCoverages/PolarGroundCoverage.tsx";
 import FOBBoundaries from "./pages/PolygonalAreas/FOBBoundaries.tsx";

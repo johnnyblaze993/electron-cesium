@@ -1,6 +1,6 @@
-// src/DrawerMenu.tsx
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // Import useTranslation
 import {
   Drawer,
   IconButton,
@@ -11,17 +11,18 @@ import {
   ListItemText,
   Box,
   Collapse,
-} from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import RoomIcon from '@mui/icons-material/Room';
-import InboxIcon from '@mui/icons-material/Inbox';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import RadarIcon from '@mui/icons-material/Radar';
-import LayersIcon from '@mui/icons-material/Layers';
-import TerrainIcon from '@mui/icons-material/Terrain';
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import RoomIcon from "@mui/icons-material/Room";
+import InboxIcon from "@mui/icons-material/Inbox";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import RadarIcon from "@mui/icons-material/Radar";
+import LayersIcon from "@mui/icons-material/Layers";
+import TerrainIcon from "@mui/icons-material/Terrain";
 
 const DrawerMenu: React.FC = () => {
+  const { t } = useTranslation(); // Initialize useTranslation
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [openMenuItems, setOpenMenuItems] = useState({
     sensors: false,
@@ -57,7 +58,7 @@ const DrawerMenu: React.FC = () => {
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
-            <ListItemText primary="Test Page" />
+            <ListItemText primary={t("testPage")} /> {/* Translated */}
           </ListItemButton>
         </ListItem>
 
@@ -67,41 +68,45 @@ const DrawerMenu: React.FC = () => {
             <ListItemIcon>
               <RoomIcon />
             </ListItemIcon>
-            <ListItemText primary="Add Coordinates" />
+            <ListItemText primary={t("addPoints")} /> {/* Translated */}
           </ListItemButton>
         </ListItem>
 
         {/* Sensors */}
         <ListItem disablePadding>
-          <ListItemButton onClick={() => handleToggle('sensors')}>
+          <ListItemButton onClick={() => handleToggle("sensors")}>
             <ListItemIcon>
               <RadarIcon />
             </ListItemIcon>
-            <ListItemText primary="Sensors" />
+            <ListItemText primary={t("sensors")} /> {/* Add key "sensors" */}
             {openMenuItems.sensors ? <ExpandMoreIcon /> : <ChevronRightIcon />}
           </ListItemButton>
         </ListItem>
         <Collapse in={openMenuItems.sensors} timeout="auto" unmountOnExit>
           <List component="div" disablePadding sx={{ pl: 4 }}>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => handleToggle('sensorCoverages')}>
+              <ListItemButton onClick={() => handleToggle("sensorCoverages")}>
                 <ListItemIcon>
                   <LayersIcon />
                 </ListItemIcon>
-                <ListItemText primary="Sensor Coverages" />
+                <ListItemText primary={t("sensorCoverages")} /> {/* Add key */}
                 {openMenuItems.sensorCoverages ? <ExpandMoreIcon /> : <ChevronRightIcon />}
               </ListItemButton>
             </ListItem>
             <Collapse in={openMenuItems.sensorCoverages} timeout="auto" unmountOnExit>
               <List component="div" disablePadding sx={{ pl: 4 }}>
                 <ListItem disablePadding>
-                  <ListItemButton onClick={() => navigateAndClose("/sensors/sensor-coverages/polar-ground-coverage", false)}>
-                    <ListItemText primary="Polar Ground Coverage" />
+                  <ListItemButton
+                    onClick={() => navigateAndClose("/sensors/sensor-coverages/polar-ground-coverage", false)}
+                  >
+                    <ListItemText primary={t("polarGroundCoverage")} /> {/* Translated */}
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                  <ListItemButton onClick={() => navigateAndClose("/sensors/sensor-coverages/geometric-solid", false)}>
-                    <ListItemText primary="Geometric Solid" />
+                  <ListItemButton
+                    onClick={() => navigateAndClose("/sensors/sensor-coverages/geometric-solid", false)}
+                  >
+                    <ListItemText primary={t("geometricSolid")} /> {/* Translated */}
                   </ListItemButton>
                 </ListItem>
               </List>
@@ -109,33 +114,13 @@ const DrawerMenu: React.FC = () => {
           </List>
         </Collapse>
 
-        {/* Weapons */}
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => handleToggle('weapons')}>
-            <ListItemIcon>
-              <LayersIcon />
-            </ListItemIcon>
-            <ListItemText primary="Weapons" />
-            {openMenuItems.weapons ? <ExpandMoreIcon /> : <ChevronRightIcon />}
-          </ListItemButton>
-        </ListItem>
-        <Collapse in={openMenuItems.weapons} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding sx={{ pl: 4 }}>
-            <ListItem disablePadding>
-              <ListItemButton onClick={() => navigateAndClose("/weapons/weapon-specific-graphics", false)}>
-                <ListItemText primary="Weapon Specific Graphics" />
-              </ListItemButton>
-            </ListItem>
-          </List>
-        </Collapse>
-
         {/* Polygonal Areas */}
         <ListItem disablePadding>
-          <ListItemButton onClick={() => handleToggle('polygonalAreas')}>
+          <ListItemButton onClick={() => handleToggle("polygonalAreas")}>
             <ListItemIcon>
               <TerrainIcon />
             </ListItemIcon>
-            <ListItemText primary="Polygonal Areas" />
+            <ListItemText primary={t("polygonalAreas")} /> {/* Add key */}
             {openMenuItems.polygonalAreas ? <ExpandMoreIcon /> : <ChevronRightIcon />}
           </ListItemButton>
         </ListItem>
@@ -143,27 +128,27 @@ const DrawerMenu: React.FC = () => {
           <List component="div" disablePadding sx={{ pl: 4 }}>
             <ListItem disablePadding>
               <ListItemButton onClick={() => navigateAndClose("/polygonal-areas/fob-boundaries", false)}>
-                <ListItemText primary="FOB Boundaries" />
+                <ListItemText primary={t("fobBoundaries")} /> {/* Translated */}
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
               <ListItemButton onClick={() => navigateAndClose("/polygonal-areas/protected-areas", false)}>
-                <ListItemText primary="Protected Areas" />
+                <ListItemText primary={t("protectedAreas")} /> {/* Translated */}
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
               <ListItemButton onClick={() => navigateAndClose("/polygonal-areas/allowable-areas", false)}>
-                <ListItemText primary="Allowable Areas" />
+                <ListItemText primary={t("allowableAreas")} /> {/* Translated */}
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
               <ListItemButton onClick={() => navigateAndClose("/polygonal-areas/nias", false)}>
-                <ListItemText primary="NAIs" />
+                <ListItemText primary={t("nias")} /> {/* Translated */}
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
               <ListItemButton onClick={() => navigateAndClose("/polygonal-areas/ignored-regions", false)}>
-                <ListItemText primary="Ignored Regions" />
+                <ListItemText primary={t("ignoredRegions")} /> {/* Translated */}
               </ListItemButton>
             </ListItem>
           </List>
@@ -171,11 +156,11 @@ const DrawerMenu: React.FC = () => {
 
         {/* Threats */}
         <ListItem disablePadding>
-          <ListItemButton onClick={() => handleToggle('threats')}>
+          <ListItemButton onClick={() => handleToggle("threats")}>
             <ListItemIcon>
               <RadarIcon />
             </ListItemIcon>
-            <ListItemText primary="Threats" />
+            <ListItemText primary={t("threats")} /> {/* Add key */}
             {openMenuItems.threats ? <ExpandMoreIcon /> : <ChevronRightIcon />}
           </ListItemButton>
         </ListItem>
@@ -183,17 +168,17 @@ const DrawerMenu: React.FC = () => {
           <List component="div" disablePadding sx={{ pl: 4 }}>
             <ListItem disablePadding>
               <ListItemButton onClick={() => navigateAndClose("/threats/threat-specific-graphics", false)}>
-                <ListItemText primary="Threat Specific Graphics" />
+                <ListItemText primary={t("threatSpecificGraphics")} /> {/* Translated */}
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
               <ListItemButton onClick={() => navigateAndClose("/threats/flight-profiles", false)}>
-                <ListItemText primary="Flight Profiles" />
+                <ListItemText primary={t("flightProfiles")} /> {/* Translated */}
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
               <ListItemButton onClick={() => navigateAndClose("/threats/impact-areas", false)}>
-                <ListItemText primary="Impact Areas" />
+                <ListItemText primary={t("impactAreas")} /> {/* Translated */}
               </ListItemButton>
             </ListItem>
           </List>
@@ -209,7 +194,7 @@ const DrawerMenu: React.FC = () => {
         edge="start"
         color="inherit"
         aria-label="menu"
-        style={{ position: 'absolute', top: '10px', left: '15px' }}
+        style={{ position: "absolute", top: "10px", left: "15px" }}
       >
         <MenuIcon />
       </IconButton>
