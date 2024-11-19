@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import { useTranslation } from 'react-i18next';
+import OpenTestWindowButton from './components/OpenTestWindowButton';
 // Set your Cesium Ion Access Token
 Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2M2I0NDlhNi0xM2ZmLTQzODEtOWQ3OC03OTg3NDU3MTBlODUiLCJpZCI6MjUwNTMwLCJpYXQiOjE3Mjk3NzgzNzR9.kb003ews9fyouXCJthtNxLDIYMukHobYM60UOiv5FpI';
 
@@ -85,62 +86,44 @@ function App() {
 
   return (
     <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
-    {/* Floating UI Controls */}
-    <div
-      style={{
-        position: "absolute",
-        top: "10px",
-        left: "10px",
-        display: "flex",
-        gap: "10px",
-        zIndex: 1000, // Ensure it appears above Cesium
-      }}
-    >
-      <LanguageSwitcher />
-      <button
-        onClick={() => {
-          if (window.electronAPI?.openTestWindow) {
-            window.electronAPI.openTestWindow();
-          } else {
-            console.warn("electronAPI or openTestWindow is not available");
-          }
-        }}
+      {/* Floating UI Controls */}
+      <div
         style={{
-          padding: "5px 10px",
-          border: "none",
-          borderRadius: "4px",
-          backgroundColor: "#007bff",
-          color: "#fff",
-          cursor: "pointer",
+          position: "absolute",
+          top: "10px",
+          left: "10px",
+          display: "flex",
+          gap: "10px",
+          zIndex: 1000, // Ensure it appears above Cesium
         }}
       >
-        {t("openTestWindow")}
-      </button>
-    </div>
+        <LanguageSwitcher />
+        <OpenTestWindowButton />
+      </div>
 
-    {/* Cesium Viewer */}
-    <Viewer
-      full
-      terrainProvider={terrainProvider}
-      ref={viewerRef}
-      style={{ height: "100%", width: "100%" }}
-    >
-      {polygonPositions.map((position, index) => (
-        <Entity key={index} position={position}>
-          <PointGraphics pixelSize={10} color={Color.RED} />
-        </Entity>
-      ))}
-      {polygonPositions.length >= 3 && (
-        <Entity name="Polygon">
-          <PolygonGraphics
-            hierarchy={new PolygonHierarchy(polygonPositions)}
-            material={Color.RED.withAlpha(0.5)}
-            outline={false}
-          />
-        </Entity>
-      )}
-    </Viewer>
-  </div>
+      {/* Cesium Viewer */}
+      <Viewer
+        full
+        terrainProvider={terrainProvider}
+        ref={viewerRef}
+        style={{ height: "100%", width: "100%" }}
+      >
+        {polygonPositions.map((position, index) => (
+          <Entity key={index} position={position}>
+            <PointGraphics pixelSize={10} color={Color.RED} />
+          </Entity>
+        ))}
+        {polygonPositions.length >= 3 && (
+          <Entity name="Polygon">
+            <PolygonGraphics
+              hierarchy={new PolygonHierarchy(polygonPositions)}
+              material={Color.RED.withAlpha(0.5)}
+              outline={false}
+            />
+          </Entity>
+        )}
+      </Viewer>
+    </div>
   );
 }
 
