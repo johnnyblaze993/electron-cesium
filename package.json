@@ -5,7 +5,7 @@
   "main": "build/electron/electron.js",
   "scripts": {
     "clean": "rimraf build dist",
-    "start": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "start": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron --remote-debugging-port=9222 .\"",
     "build": "npm run clean && vite build && tsc",
     "electron:build": "npm run build && electron-builder",
     "dev": "vite"
