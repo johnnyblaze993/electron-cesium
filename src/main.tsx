@@ -7,6 +7,7 @@ import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import App from "./App.tsx";
 import Test from "./components/Test.tsx";
+import MenuTreeParameterGroups from "./components/MenuTreeParameterGroups.tsx";
 import AddCoordinate from "./components/AddCoordinate.tsx";
 import NIAs from "./pages/PolygonalAreas/NIAs.tsx";
 import ProtectedAreas from "./pages/PolygonalAreas/ProtectedAreas.tsx";
@@ -49,6 +50,7 @@ const Main = () => {
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/test" element={<Test />} />
+          <Route path="/menu-tree-parameter-groups" element={<MenuTreeParameterGroups />} />
           <Route path="/add-coordinate" element={<AddCoordinate />} />
           <Route path="/polygonal-areas/nias" element={<NIAs />} />
           <Route path="/polygonal-areas/protected-areas" element={<ProtectedAreas />} />
