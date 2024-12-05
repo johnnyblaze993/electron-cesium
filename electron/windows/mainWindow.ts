@@ -1,5 +1,6 @@
 import { BrowserWindow, app } from "electron";
 import * as path from "path";
+import { closeAllTestWindows } from "./testWindow";
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -26,7 +27,13 @@ export function createMainWindow() {
   }
 
   mainWindow.on("closed", () => {
+    console.log("Main window closed")
     mainWindow = null;
+  });
+
+  mainWindow.on("close", () => {
+    console.log("Main window is closing. Closing all test windows.");
+    closeAllTestWindows(); // Call the function to close all test windows
   });
 
   mainWindow.webContents.on("did-finish-load", () => {
