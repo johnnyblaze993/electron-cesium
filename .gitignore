@@ -26,3 +26,5 @@ build/
 
 dist-electron/
 *.tsbuildinfo
+
+.env
