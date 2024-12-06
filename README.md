@@ -1,4 +1,6 @@
 # Run app on electron
+  ## clear dist and build directories
+  - npm run clean
   ## Build Electron prod:
   - npm run build (creates dist and build)
   - npm run electron:build (packages the all using dist & build)
@@ -35,3 +37,7 @@ viewer.entities.add({
 });
  
 viewer.zoomTo(viewer.entities);
+
+## Electron Setup
+
+For details about the Electron setup and architecture, check out the [Electron README](./electron/README.md).
