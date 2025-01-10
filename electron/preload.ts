@@ -9,4 +9,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setLanguage: (language: string) => ipcRenderer.send('set-language', language),
   onLanguageUpdate: (callback: (language: string) => void) =>
     ipcRenderer.on('update-language', (_event, language) => callback(language)),
+  callTestEndpoint: () => ipcRenderer.invoke('call-test-endpoint')
 });
