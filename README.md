@@ -5,7 +5,7 @@
   - npm run build (creates dist and build)
   - npm run electron:build (packages the all using dist & build)
   ## Run Electron in Development: 
-  - npm run build (creates dist)
+  - npm run build (creates dist and build)
   - npm run start (opens electron app and another version in the browser)
 
 # Run app without electron
