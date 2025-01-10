@@ -20,5 +20,7 @@
   "polygonalAreas": "Polygonal Areas",
   "weapons": "Weapons",
   "threats": "Threats",
-  "addCoordinates": "Add Coordinates"
+  "addCoordinates": "Add Coordinates",
+  "addedPoints": "Added Points",
+  "noPoints": "No Points"
 }
