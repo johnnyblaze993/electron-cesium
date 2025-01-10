@@ -15,6 +15,7 @@
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.1.5",
     "@mui/material": "^6.1.5",
+    "axios": "^1.7.9",
     "cesium": "^1.122.0",
     "dotenv": "^16.4.7",
     "i18next": "^23.16.5",
