@@ -1,119 +1,142 @@
 //@ts-nocheck
 import React, { useState } from 'react';
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
+  Stack,
+} from '@mui/material';
 import DrawerMenu from './DrawerMenu';
-import { TextField, Button, Box, List, ListItem, ListItemText, Typography, Paper, Stack } from '@mui/material';
 import { useCoordinateStore } from '../stores/coordinateStore';
 import { useTranslation } from 'react-i18next';
 
 interface Coordinate {
-    longitude: string;
-    latitude: string;
+  longitude: string;
+  latitude: string;
 }
 
 const AddCoordinate: React.FC = () => {
-    const { t } = useTranslation();
-    const [coordinate, setCoordinate] = useState<Coordinate>({ longitude: '', latitude: '' });
-    const addCoordinate = useCoordinateStore((state) => state.addCoordinate);
-    const coordinates = useCoordinateStore((state) => state.coordinates);
+  const { t } = useTranslation();
+  const [coordinate, setCoordinate] = useState<Coordinate>({ longitude: '', latitude: '' });
+  const addCoordinate = useCoordinateStore((state) => state.addCoordinate);
+  const coordinates = useCoordinateStore((state) => state.coordinates);
 
-    const handleInputChange = (field: string, value: string) => {
-        setCoordinate({
-            ...coordinate,
-            [field]: value,
-        });
-    };
+  const handleInputChange = (field: string, value: string) => {
+    setCoordinate((prev) => ({ ...prev, [field]: value }));
+  };
 
-    const handleSubmit = (event: React.FormEvent) => {
-        event.preventDefault();
-        addCoordinate(coordinate);
-        window.electronAPI.sendCoordinates(coordinate);
-        setCoordinate({ longitude: '', latitude: '' });
-    };
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    addCoordinate(coordinate);
+    window.electronAPI.sendCoordinates(coordinate);
+    setCoordinate({ longitude: '', latitude: '' });
+  };
 
-    return (
-        <Box
-            sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100vh',
-                width: '100vw',
-                // backgroundColor: '#121212',
-                overflow: 'hidden',
-            }}
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        height: '100vh',
+        backgroundColor: (theme) => theme.palette.background.default,
+        // alignItems: 'center',
+        width: '100vw',
+
+      }}
+
+    >
+      {/* Drawer Menu */}
+      <DrawerMenu />
+
+      {/* Centered Main Content */}
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          p: 2,
+        }}
+      >
+        <Paper
+          sx={{
+            width: { xs: '100%', sm: '90%', md: '600px' },
+            p: 4,
+            borderRadius: 2,
+            boxShadow: 3,
+            backgroundColor: (theme) => theme.palette.background.paper,
+            color: (theme) => theme.palette.text.primary,
+          }}
         >
-            <DrawerMenu />
-
-            <Paper
-                sx={{
-                    width: '100%',
-                    maxWidth: 600,
-                    padding: 4,
-                    borderRadius: 2,
-                    boxShadow: 3,
-                    backgroundColor: '#1e1e1e',
-                    color: '#e0e0e0',
-                }}
+          <Typography variant="h4" align="center" gutterBottom>
+            {t('addPoints')}
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }} mb={3}>
+              <TextField
+                label={t('longitude')}
+                value={coordinate.longitude}
+                onChange={(e) => handleInputChange('longitude', e.target.value)}
+                required
+                fullWidth
+              />
+              <TextField
+                label={t('latitude')}
+                value={coordinate.latitude}
+                onChange={(e) => handleInputChange('latitude', e.target.value)}
+                required
+                fullWidth
+              />
+            </Stack>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ mb: 3 }}
             >
-                <Typography variant="h4" align="center" gutterBottom>
-                    {t('addPoints')}
-                </Typography>
-                <form onSubmit={handleSubmit}>
-                    <Stack spacing={2} direction="row" justifyContent="center" mb={2}>
-                        <TextField
-                            label="Longitude"
-                            value={coordinate.longitude}
-                            onChange={(e) => handleInputChange('longitude', e.target.value)}
-                            required
-                            InputLabelProps={{ style: { color: '#b0b0b0' } }}
-                            InputProps={{ style: { color: '#e0e0e0', backgroundColor: '#333' } }}
-                        />
-                        <TextField
-                            label="Latitude"
-                            value={coordinate.latitude}
-                            onChange={(e) => handleInputChange('latitude', e.target.value)}
-                            required
-                            InputLabelProps={{ style: { color: '#b0b0b0' } }}
-                            InputProps={{ style: { color: '#e0e0e0', backgroundColor: '#333' } }}
-                        />
-                    </Stack>
-                    <Button type="submit" variant="contained" color="primary" sx={{ marginBottom: 3 }}>
-                        {t('newPoint')}
-                    </Button>
-                </form>
+              {t('newPoint')}
+            </Button>
+          </form>
 
-                {/* Display added coordinates in Material-UI Papers */}
-                <Typography variant="h6" align="center" gutterBottom>
-              {
-                coordinates.length > 0
-                  ? 'Added Points'
-                  : 'No Points Added Yet'
-              }
-                </Typography>
-                <List>
-                    {coordinates.map((coord, index) => (
-                        <ListItem key={index} disablePadding>
-                            <Paper
-                                elevation={1}
-                                sx={{
-                                    width: '100%',
-                                    padding: 2,
-                                    marginBottom: 1,
-                                    backgroundColor: '#333',
-                                    color: '#e0e0e0',
-                                }}
-                            >
-                                <ListItemText
-                                    primary={`Longitude: ${coord.longitude}, Latitude: ${coord.latitude}`}
-                                    primaryTypographyProps={{ align: 'center' }}
-                                />
-                            </Paper>
-                        </ListItem>
-                    ))}
-                </List>
-            </Paper>
-        </Box>
-    );
+          <Typography variant="h6" align="center" gutterBottom>
+            {coordinates.length > 0 ? t('addedPoints') : t('noPoints')}
+          </Typography>
+          <List
+            sx={{
+              maxHeight: '200px',
+              overflowY: 'auto',
+              '&::-webkit-scrollbar': { display: 'none' },
+            }}
+          >
+            {coordinates.map((coord, index) => (
+              <ListItem key={index} disablePadding>
+                <Paper
+                  elevation={1}
+                  sx={{
+                    width: '100%',
+                    p: 2,
+                    mb: 1,
+                    backgroundColor: (theme) => theme.palette.grey[400],
+                    color: (theme) => theme.palette.text.secondary,
+                  }}
+                >
+                  <ListItemText
+                    primary={`Longitude: ${coord.longitude}, Latitude: ${coord.latitude}`}
+                    primaryTypographyProps={{ align: 'center' }}
+                  />
+                </Paper>
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
+      </Box>
+    </Box>
+  );
 };
 
 export default AddCoordinate;
