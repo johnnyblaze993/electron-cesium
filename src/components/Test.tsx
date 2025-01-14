@@ -4,6 +4,7 @@ import DrawerMenu from './DrawerMenu';  // Import the DrawerMenu component
 import { useTranslation } from 'react-i18next';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const handleTestEndpointCall = async () => {
   try {
@@ -27,9 +28,29 @@ const handleRunSimulationExe = async () => {
   }
 };
 
+
+
 const Test: React.FC = () => {
+  const [message, setMessage] = useState(""); // Success or error message
+  const [isLoading, setIsLoading] = useState(false); // Manage loading state
+
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const handleClearSimOutputFiles = async () => {
+    setMessage("");
+    setIsLoading(true);
+    try {
+      await window.electronAPI.clearSimOutputFiles();
+      setMessage("simOutputFiles directory cleared successfully.");
+    } catch (err) {
+      console.error(err);
+      setMessage("Failed to clear simOutputFiles directory.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div style={
       {
@@ -80,6 +101,15 @@ const Test: React.FC = () => {
         >
           Run EXE Simulation
         </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleClearSimOutputFiles}
+          disabled={isLoading}
+        >
+          Clear simOutputFiles Directory
+        </Button>
+        {message && <p style={{ marginTop: '10px' }}>{message}</p>}
       </div>
     </div>
   );

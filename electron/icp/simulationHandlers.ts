@@ -46,6 +46,30 @@ export function setupSimulationHandlers() {
     });
   });
 
+  // Handle clearing simulation output files
+  ipcMain.handle("clear-sim-output-files", async () => {
+    return new Promise((resolve, reject) => {
+      try {
+        if (fs.existsSync(outputDir)) {
+          // Read all files in the directory
+          const files = fs.readdirSync(outputDir);
+
+          // Delete each file
+          files.forEach((file) => {
+            const filePath = path.join(outputDir, file);
+            fs.unlinkSync(filePath); // Remove the file
+          });
+
+          console.log(`Cleared all files in ${outputDir}`);
+        }
+        resolve(true);
+      } catch (err) {
+        console.error(`Failed to clear simOutputFiles: ${err}`);
+        reject(err);
+      }
+    });
+  });
+
   // Helper function to move simulation output files to `simOutputFiles`
   const moveFilesToOutputDir = () => {
     const files = fs.readdirSync(simulationsPath); // Read all files in the simulations folder
