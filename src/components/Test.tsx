@@ -16,6 +16,28 @@ const handleTestEndpointCall = async () => {
   }
 };
 
+const handleRunSimulationExe = async () => {
+  try {
+    const result = await (window as any).electronAPI.runSimulationExe(); // Run EXE simulation
+    console.log('EXE Simulation Result:', result);
+    alert(`EXE Simulation completed: ${result}`);
+  } catch (error) {
+    console.error('Error running EXE Simulation:', error);
+    alert('Failed to run EXE Simulation. Check the console for details.');
+  }
+};
+
+const handleRunSimulationPy = async () => {
+  try {
+    const result = await (window as any).electronAPI.runSimulationPy(); // Run Python simulation
+    console.log('Python Simulation Result:', result);
+    alert(`Python Simulation completed: ${result}`);
+  } catch (error) {
+    console.error('Error running Python Simulation:', error);
+    alert('Failed to run Python Simulation. Check the console for details.');
+  }
+};
+
 const Test: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -55,6 +77,28 @@ const Test: React.FC = () => {
       >
         Test Electron Endpoint
       </Button>
+          {/* Simulation Buttons */}
+          <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        marginTop: '10px',
+           }}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleRunSimulationExe}
+          style={{ marginBottom: '10px' }}
+        >
+          Run EXE Simulation
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleRunSimulationPy}
+        >
+          Run Python Simulation
+        </Button>
+      </div>
     </div>
   );
 };

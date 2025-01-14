@@ -9,5 +9,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setLanguage: (language: string) => ipcRenderer.send('set-language', language),
   onLanguageUpdate: (callback: (language: string) => void) =>
     ipcRenderer.on('update-language', (_event, language) => callback(language)),
-  callTestEndpoint: () => ipcRenderer.invoke('call-test-endpoint')
+  callTestEndpoint: () => ipcRenderer.invoke('call-test-endpoint'),
+  runSimulationExe: () => ipcRenderer.invoke("run-simulation-exe"),
+  runSimulationPy: () => ipcRenderer.invoke("run-simulation-py"),
 });

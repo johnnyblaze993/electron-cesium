@@ -1,9 +1,11 @@
+
 import { app } from "electron";
 import { createMainWindow, getMainWindow } from "./windows/mainWindow";
 import { closeAllTestWindows } from "./windows/testWindow";
 import { setupLanguageHandlers } from "./icp/languageHandlers";
 import { setupCoordinateHandlers } from "./icp/coordinateHandlers";
 import { setupTestWindowHandlers } from "./icp/testWindowHandlers";
+import { setupSimulationHandlers } from "./icp/simulationHandlers";
 
 app.whenReady().then(() => {
   console.log("App is ready, creating main window");
@@ -13,6 +15,7 @@ app.whenReady().then(() => {
   setupLanguageHandlers();
   setupCoordinateHandlers();
   setupTestWindowHandlers();
+  setupSimulationHandlers(); 
 });
 
 app.on("window-all-closed", () => {
