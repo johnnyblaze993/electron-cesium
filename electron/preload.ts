@@ -11,5 +11,4 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.on('update-language', (_event, language) => callback(language)),
   callTestEndpoint: () => ipcRenderer.invoke('call-test-endpoint'),
   runSimulationExe: () => ipcRenderer.invoke("run-simulation-exe"),
-  runSimulationPy: () => ipcRenderer.invoke("run-simulation-py"),
 });
