@@ -28,3 +28,6 @@ dist-electron/
 *.tsbuildinfo
 
 .env
+*.csv
+sim_data_example_after.json
+sim_data_example_before.json
