@@ -1,36 +1,71 @@
-// electron/ipc/simulationHandlers.ts
 import { ipcMain } from "electron";
-import { execFile, spawn } from "child_process";
+import { spawn } from "child_process";
 import path from "path";
+import fs from "fs";
 
+// Define paths
 const simulationsPath = "C:\\Users\\alvarezjo\\Work\\electron-cesium\\simulations";
+const outputDir = path.join(simulationsPath, "simOutputFiles");
+
+// Ensure the `simOutputFiles` directory exists
+if (!fs.existsSync(outputDir)) {
+  fs.mkdirSync(outputDir, { recursive: true });
+}
 
 export function setupSimulationHandlers() {
-    ipcMain.handle("run-simulation-exe", async () => {
-        return new Promise((resolve, reject) => {
-          const exePath = path.join(simulationsPath, "Sim_ex_v1");
-          const process = spawn(exePath);
-      
-          let output = "";
-          let errorOutput = "";
-      
-          process.stdout.on("data", (data) => {
-            output += data.toString();
-          });
-      
-          process.stderr.on("data", (data) => {
-            errorOutput += data.toString();
-          });
-      
-          process.on("close", (code) => {
-            if (code === 0) {
-              console.log("Simulation output:", output);
-              resolve(output);
-            } else {
-              console.error("Simulation error:", errorOutput);
-              reject(errorOutput);
-            }
-          });
-        });
+  ipcMain.handle("run-simulation-exe", async () => {
+    return new Promise((resolve, reject) => {
+      const exePath = path.join(simulationsPath, "Sim_ex_v1");
+      const process = spawn(exePath, { cwd: simulationsPath }); // Run simulation in the simulations folder
+
+      let output = "";
+      let errorOutput = "";
+
+      process.stdout.on("data", (data) => {
+        output += data.toString();
       });
+
+      process.stderr.on("data", (data) => {
+        errorOutput += data.toString();
+      });
+
+      process.on("close", (code) => {
+        if (code === 0) {
+          console.log("Simulation completed successfully.");
+
+          // Move only simulation output files (exclude .exe and .py files)
+          const movedFiles = moveFilesToOutputDir();
+          console.log(`Moved files to ${outputDir}:`, movedFiles);
+
+          resolve({ success: true, movedFiles });
+        } else {
+          console.error("Simulation failed.", errorOutput);
+          reject({ success: false, error: errorOutput || "Failed to execute simulation." });
+        }
+      });
+    });
+  });
+
+  // Helper function to move simulation output files to `simOutputFiles`
+  const moveFilesToOutputDir = () => {
+    const files = fs.readdirSync(simulationsPath); // Read all files in the simulations folder
+    const excludedExtensions = [".exe", ".py"]; // Files to exclude from moving
+    const movedFiles: string[] = [];
+
+    files.forEach((file) => {
+      const currentPath = path.join(simulationsPath, file);
+      const newPath = path.join(outputDir, file);
+
+      // Skip directories and excluded file types
+      if (
+        fs.lstatSync(currentPath).isFile() &&
+        !excludedExtensions.some((ext) => file.endsWith(ext))
+      ) {
+        fs.renameSync(currentPath, newPath);
+        movedFiles.push(file);
+      }
+    });
+
+    return movedFiles; // Return the list of moved files
+  };
 }
