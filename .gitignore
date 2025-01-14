@@ -33,3 +33,6 @@ sim_data_example_after.json
 sim_data_example_before.json
 *.py
 *.exe
+
+# Ignore files starting with simex_
+simex_*
