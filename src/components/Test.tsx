@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+//@ts-nocheck
+
+import React, { useState, useEffect } from "react";
 import DrawerMenu from "./DrawerMenu"; // Import the DrawerMenu component
 import { useTranslation } from "react-i18next";
-import { Button } from "@mui/material";
+import { Button, Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import Papa from "papaparse";
 
 const handleTestEndpointCall = async () => {
   try {
@@ -19,8 +22,24 @@ const Test: React.FC = () => {
   const [message, setMessage] = useState(""); // Success or error message
   const [isLoading, setIsLoading] = useState(false); // Manage loading state for clearing files
   const [isLoadingExe, setIsLoadingExe] = useState(false); // Manage loading state for EXE simulation
+  const [files, setFiles] = useState([]); // List of matching files
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  // Fetch matching files on component mount
+  useEffect(() => {
+    const fetchFiles = async () => {
+      try {
+        const matchingFiles = await window.electronAPI.getMatchingFiles();
+        setFiles(matchingFiles);
+      } catch (error) {
+        console.error("Error fetching files:", error);
+        setMessage("Failed to fetch files. Check the console for details.");
+      }
+    };
+
+    fetchFiles();
+  }, []);
 
   const handleRunSimulationExe = async () => {
     setMessage("");
@@ -48,6 +67,29 @@ const Test: React.FC = () => {
       setMessage("Failed to clear simOutputFiles directory.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Handle file parsing and logging
+  const handleParseFile = async (fileName: string) => {
+    setMessage("");
+    try {
+      const fileContents = await window.electronAPI.readFile(fileName);
+      Papa.parse(fileContents, {
+        header: true,
+        skipEmptyLines: true,
+        complete: (result) => {
+          console.log(`Parsed Data for ${fileName}:`, result.data);
+          setMessage(`File ${fileName} parsed successfully. Check the console for details.`);
+        },
+        error: (error) => {
+          console.error("Error parsing CSV:", error);
+          setMessage(`Failed to parse file: ${fileName}`);
+        },
+      });
+    } catch (error) {
+      console.error(`Error reading file ${fileName}:`, error);
+      setMessage(`Failed to read file: ${fileName}`);
     }
   };
 
@@ -111,12 +153,32 @@ const Test: React.FC = () => {
         >
           {isLoading ? "Clearing Directory..." : "Clear simOutputFiles Directory"}
         </Button>
+        {files.length > 0 && (
+          <Box sx={{ marginTop: 4 }}>
+            <Typography variant="h6">Select a File:</Typography>
+            {files.map((file, index) => (
+              <Button
+                key={index}
+                variant="contained"
+                color="primary"
+                onClick={() => handleParseFile(file)}
+                sx={{ margin: 1 }}
+              >
+                {file}
+              </Button>
+            ))}
+          </Box>
+        )}
         {isLoadingExe && (
           <p style={{ marginTop: "10px", fontStyle: "italic", color: "gray" }}>
             Please wait, simulation is running...
           </p>
         )}
-        {message && <p style={{ marginTop: "10px" }}>{message}</p>}
+        {message && (
+          <p style={{ marginTop: "10px", color: message.includes("Failed") ? "red" : "green" }}>
+            {message}
+          </p>
+        )}
       </div>
     </div>
   );

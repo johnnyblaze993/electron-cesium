@@ -92,4 +92,38 @@ export function setupSimulationHandlers() {
 
     return movedFiles; // Return the list of moved files
   };
+
+  ipcMain.handle("get-matching-files", async () => {
+    try {
+      // Read all files in the directory
+      const files = fs.readdirSync(outputDir);
+
+      // Filter files with "after" in the name and .csv extension
+      const matchingFiles = files.filter(
+        (file) => file.includes("after") && file.endsWith(".csv")
+      );
+
+      console.log("Matching files:", matchingFiles);
+
+      // Return the matching file names
+      return matchingFiles;
+    } catch (error) {
+      console.error("Error fetching matching files:", error);
+      throw error;
+    }
+  });
+
+  ipcMain.handle("read-file", async (_event, fileName) => {
+    try {
+      const filePath = path.join(outputDir, fileName);
+      if (!fs.existsSync(filePath)) {
+        throw new Error(`File not found: ${fileName}`);
+      }
+      const fileContents = fs.readFileSync(filePath, "utf-8");
+      return fileContents;
+    } catch (error) {
+      console.error(`Error reading file ${fileName}:`, error);
+      throw error;
+    }
+  });
 }

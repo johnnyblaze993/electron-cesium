@@ -11,5 +11,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.on('update-language', (_event, language) => callback(language)),
   callTestEndpoint: () => ipcRenderer.invoke('call-test-endpoint'),
   runSimulationExe: () => ipcRenderer.invoke("run-simulation-exe"),
-  clearSimOutputFiles: () => ipcRenderer.invoke("clear-sim-output-files")
+  clearSimOutputFiles: () => ipcRenderer.invoke("clear-sim-output-files"),
+  getMatchingFiles: async () => {
+    console.log("getMatchingFiles called"); // Debugging log
+    return ipcRenderer.invoke("get-matching-files");
+  },
+  readFile: (fileName: any) => ipcRenderer.invoke("read-file", fileName),
 });
