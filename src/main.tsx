@@ -6,7 +6,7 @@ import { createRoot } from "react-dom/client";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import App from "./App.tsx";
-import Test from "./components/Test.tsx";
+import Test from "./components/TestPage/Test.tsx";
 import MenuTreeParameterGroups from "./components/MenuTreeParameterGroups.tsx";
 import AddCoordinate from "./components/AddCoordinate.tsx";
 import NIAs from "./pages/PolygonalAreas/NIAs.tsx";

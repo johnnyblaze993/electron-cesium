@@ -1,8 +1,9 @@
 //@ts-nocheck
 
 import React, { useState, useEffect } from "react";
-import DrawerMenu from "./DrawerMenu"; // Import the DrawerMenu component
+import DrawerMenu from "../DrawerMenu"; // Import the DrawerMenu component
 import { useTranslation } from "react-i18next";
+import DynamicButton from "../DynamicButton"; // Import the DynamicButton component
 import { Button, Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Papa from "papaparse";
@@ -112,47 +113,31 @@ const Test: React.FC = () => {
         <h1>{t("testPage")}</h1>
         <p>{t("thisIsTheTestCompWithDrawer")}</p>
       </div>
-      <Button
-        variant="contained"
-        color="primary"
+      <DynamicButton
+        label="Go to Menu Tree Parameter Groups"
         onClick={() => navigate("/menu-tree-parameter-groups")}
-      >
-        Go to Menu Tree Parameter Groups
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleTestEndpointCall}
-        style={{ marginTop: "10px" }}
-      >
-        Test Electron Endpoint
-      </Button>
-
-      {/* Simulation Buttons */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          marginTop: "10px",
-        }}
-      >
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleRunSimulationExe}
-          disabled={isLoadingExe}
-          style={{ marginBottom: "10px" }}
-        >
-          {isLoadingExe ? "Running EXE Simulation..." : "Run EXE Simulation"}
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleClearSimOutputFiles}
-          disabled={isLoading}
-        >
-          {isLoading ? "Clearing Directory..." : "Clear simOutputFiles Directory"}
-        </Button>
+        sx={{ marginBottom: "10px" }}
+      />
+      <DynamicButton
+        label="Test Electron Endpoint"
+        onClick={() => handleTestEndpointCall()}
+        sx={{ marginBottom: "10px" }}
+      />
+      <DynamicButton
+        label={isLoadingExe ? "Running EXE Simulation..." : "Run EXE Simulation"}
+        onClick={handleRunSimulationExe}
+        isLoading={isLoadingExe}
+        color="secondary"
+        sx={{ marginBottom: "10px" }}
+      />
+      <DynamicButton
+        label={isLoading ? "Clearing Directory..." : "Clear simOutputFiles Directory"}
+        onClick={handleClearSimOutputFiles}
+        isLoading={isLoading}
+        color="secondary"
+        sx={{ marginBottom: "10px" }}
+      />
+      <div>
         {files.length > 0 && (
           <Box sx={{ marginTop: 4 }}>
             <Typography variant="h6">Select a File:</Typography>
