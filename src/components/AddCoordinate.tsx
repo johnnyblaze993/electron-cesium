@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   TextField,
@@ -10,7 +10,9 @@ import {
   ListItem,
   ListItemText,
   Stack,
+  IconButton,
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import DrawerMenu from './DrawerMenu';
 import { useCoordinateStore } from '../stores/coordinateStore';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +26,7 @@ const AddCoordinate: React.FC = () => {
   const { t } = useTranslation();
   const [coordinate, setCoordinate] = useState<Coordinate>({ longitude: '', latitude: '' });
   const addCoordinate = useCoordinateStore((state) => state.addCoordinate);
+  const removeCoordinate = useCoordinateStore((state) => state.removeCoordinate);
   const coordinates = useCoordinateStore((state) => state.coordinates);
 
   const handleInputChange = (field: string, value: string) => {
@@ -36,6 +39,24 @@ const AddCoordinate: React.FC = () => {
     window.electronAPI.sendCoordinates(coordinate);
     setCoordinate({ longitude: '', latitude: '' });
   };
+
+  const handleDelete = (index: number) => {
+    removeCoordinate(index);
+    window.electronAPI.deleteCoordinate(index); // Notify Electron
+  };
+
+  useEffect(() => {
+    const handleCoordinateDeleted = (index: number) => {
+      removeCoordinate(index);
+    };
+  
+    window.electronAPI.onCoordinateDeleted(handleCoordinateDeleted);
+  
+    return () => {
+      window.electronAPI.onCoordinateDeleted(handleCoordinateDeleted);
+    };
+  }, []);
+  
 
   return (
     <Box
@@ -129,6 +150,9 @@ const AddCoordinate: React.FC = () => {
                     primary={`Longitude: ${coord.longitude}, Latitude: ${coord.latitude}`}
                     primaryTypographyProps={{ align: 'center' }}
                   />
+                  <IconButton onClick={() => handleDelete(index)}>
+                    <DeleteIcon />
+                  </IconButton>
                 </Paper>
               </ListItem>
             ))}

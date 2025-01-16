@@ -8,4 +8,11 @@ export function setupCoordinateHandlers() {
       mainWindow.webContents.send("update-coordinates", coordinate);
     }
   });
+
+  ipcMain.on("delete-coordinate", (_event, index: number) => {
+    const mainWindow = getMainWindow();
+    if (mainWindow) {
+      mainWindow.webContents.send("coordinate-deleted", index);
+    }
+  });
 }

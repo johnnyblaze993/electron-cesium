@@ -14,6 +14,7 @@ function App() {
   const { t } = useTranslation();
   const coordinates = useCoordinateStore((state) => state.coordinates) || [];
   const addCoordinate = useCoordinateStore((state) => state.addCoordinate);
+  const removeCoordinate = useCoordinateStore((state) => state.removeCoordinate);
   const navigate = useNavigate();
   const viewerRef = useRef(null);
 
@@ -27,23 +28,41 @@ function App() {
     } else {
       console.warn('electronAPI or onCoordinatesUpdate is not available');
     }
-  }, [addCoordinate]);
+  
+    if (window.electronAPI?.onCoordinateDeleted) {
+      window.electronAPI.onCoordinateDeleted((index: number) => {
+        // Update the state to remove the coordinate
+        removeCoordinate(index);
+      });
+    }
+  }, [addCoordinate, removeCoordinate]);
 
  // Fly to the last added coordinate after a new one is added
-  useEffect(() => {
-    if (coordinates.length > 0 && viewerRef.current) {
+ useEffect(() => {
+  if (viewerRef.current) {
+    const viewer = viewerRef.current.cesiumElement;
+
+    if (coordinates.length > 0) {
+      // Fly to the last coordinate
       const lastCoordinate = coordinates[coordinates.length - 1];
       const lastPosition = Cartesian3.fromDegrees(
         parseFloat(lastCoordinate.longitude),
         parseFloat(lastCoordinate.latitude),
         1000
       );
-      viewerRef.current.cesiumElement.camera.flyTo({
+      viewer.camera.flyTo({
         destination: lastPosition,
         duration: 2,
       });
+    } else {
+      // If no coordinates, reset the view to the default world view
+      viewer.camera.flyTo({
+        destination: Cartesian3.fromDegrees(0, 0, 20000000), // Default to zoom out to the whole Earth
+        duration: 2,
+      });
     }
-  }, [coordinates]);
+  }
+}, [coordinates]);
 
   return (
     <div style={{ position: 'relative', height: '100vh', width: '100vw' }}>

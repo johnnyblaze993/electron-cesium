@@ -10,24 +10,20 @@ interface Coordinate {
 interface CoordinateStore {
   coordinates: Coordinate[];
   addCoordinate: (coordinate: Coordinate) => void;
+  removeCoordinate: (index: number) => void;
   setCoordinates: (coordinates: Coordinate[]) => void;
 }
 
 export const useCoordinateStore = create<CoordinateStore>((set) => ({
-  coordinates: [],  // Initial empty array of coordinates
+  coordinates: [],
   addCoordinate: (coordinate) =>
+    set((state) => ({
+      coordinates: [...state.coordinates, coordinate],
+    })),
+  removeCoordinate: (index) =>
     set((state) => {
-      const updatedCoordinates = [...state.coordinates, coordinate];
-      console.log('Updated coordinates after adding:', updatedCoordinates);
-      return {
-        coordinates: updatedCoordinates,
-      };
+      const updatedCoordinates = state.coordinates.filter((_, i) => i !== index);
+      return { coordinates: updatedCoordinates };
     }),
-  setCoordinates: (coordinates) =>
-    set(() => {
-      console.log('Setting new coordinates:', coordinates);
-      return {
-        coordinates,
-      };
-    }),
+  setCoordinates: (coordinates) => set({ coordinates }),
 }));
