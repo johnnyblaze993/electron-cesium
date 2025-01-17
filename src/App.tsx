@@ -39,7 +39,8 @@ function App() {
 
  // Fly to the last added coordinate after a new one is added
  useEffect(() => {
-  if (viewerRef.current) {
+  // Ensure the Cesium viewer is initialized
+  if (viewerRef.current && viewerRef.current.cesiumElement) {
     const viewer = viewerRef.current.cesiumElement;
 
     if (coordinates.length > 0) {
