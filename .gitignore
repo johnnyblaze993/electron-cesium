@@ -36,3 +36,5 @@ sim_data_example_before.json
 
 # Ignore files starting with simex_
 simex_*
+
+ignored/
