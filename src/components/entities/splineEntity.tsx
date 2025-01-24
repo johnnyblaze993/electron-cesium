@@ -7,31 +7,34 @@ import { CatmullRomSpline, Cartesian3, Color } from "cesium";
 import { huntsvillePoints } from "../../huntsvillePoints";
 
 const SplineEntity: React.FC = () => {
-  const { splinePositions, cartesianPoints } = useMemo(() => {
-    // Convert points to Cartesian3
-    const cartesianPoints = huntsvillePoints.map((point) =>
+  const { splinePositions, visiblePoints } = useMemo(() => {
+    // Filter points that are visible
+    const visiblePoints = huntsvillePoints.filter((point) => point.visible);
+
+    // Convert visible points to Cartesian3
+    const cartesianPoints = visiblePoints.map((point) =>
       Cartesian3.fromDegrees(point.longitude, point.latitude, point.altitude)
     );
 
-    // Generate times array as a sequence of incremental numbers
+    // Generate times array
     const times = cartesianPoints.map((_, index) => index);
 
-    // Create the Catmull-Rom spline
+    // Create Catmull-Rom spline
     const spline = new CatmullRomSpline({
-      times, // Incremental times
+      times,
       points: cartesianPoints,
     });
 
-    // Generate positions along the entire spline
+    // Generate positions along the spline
     const splinePositions = [];
-    const numSamples = 200; // More samples for smoother rendering
+    const numSamples = 200; // Smoother spline
 
     for (let i = 0; i <= numSamples; i++) {
-      const t = (i / numSamples) * (times[times.length - 1] - times[0]); // Scale t to fit times
+      const t = (i / numSamples) * (times[times.length - 1] - times[0]);
       splinePositions.push(spline.evaluate(t));
     }
 
-    return { splinePositions, cartesianPoints };
+    return { splinePositions, visiblePoints };
   }, []);
 
   return (
@@ -45,16 +48,16 @@ const SplineEntity: React.FC = () => {
         />
       </Entity>
 
-      {/* Render points as markers */}
-      {cartesianPoints.map((position, index) => (
+      {/* Render visible points */}
+      {visiblePoints.map((point, index) => (
         <Entity
           key={index}
-          position={position}
+          position={Cartesian3.fromDegrees(point.longitude, point.latitude, point.altitude)}
           name={`Point ${index + 1}`}
         >
           <PointGraphics
             pixelSize={12}
-            color={Color.RED} // Distinct red points
+            color={point.acquired ? Color.GREEN : Color.RED} // Green for acquired, red otherwise
             outlineColor={Color.WHITE}
             outlineWidth={2}
           />
