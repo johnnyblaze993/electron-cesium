@@ -1,0 +1,14 @@
+// huntsvillePoints.ts
+export const huntsvillePoints = [
+    { longitude: -86.5861, latitude: 34.7304, altitude: 250 },
+    { longitude: -86.5855, latitude: 34.7312, altitude: 255 },
+    { longitude: -86.5849, latitude: 34.7320, altitude: 260 },
+    { longitude: -86.5843, latitude: 34.7328, altitude: 265 },
+    { longitude: -86.5837, latitude: 34.7336, altitude: 270 },
+    { longitude: -86.5831, latitude: 34.7344, altitude: 275 },
+    { longitude: -86.5825, latitude: 34.7352, altitude: 280 },
+    { longitude: -86.5819, latitude: 34.7360, altitude: 285 },
+    { longitude: -86.5813, latitude: 34.7368, altitude: 290 },
+    { longitude: -86.5807, latitude: 34.7376, altitude: 295 },
+  ];
+  

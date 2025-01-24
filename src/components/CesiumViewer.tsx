@@ -1,6 +1,6 @@
 import { Viewer } from "resium";
 import { ForwardedRef, forwardRef } from "react";
-import { PointEntity, PolygonEntity } from "./entities";
+import { PointEntity, PolygonEntity, SplineEntity } from "./entities";
 import React from "react";
 
 interface CesiumViewerProps {
@@ -14,6 +14,7 @@ const CesiumViewer = forwardRef(
       <Viewer full terrainProvider={terrainProvider} ref={ref}>
         <PointEntity coordinates={coordinates} />
         <PolygonEntity coordinates={coordinates} />
+        <SplineEntity />
       </Viewer>
     );
   }
