@@ -100,7 +100,8 @@ export function setupSimulationHandlers() {
 
       // Filter files with "after" in the name and .csv extension
       const matchingFiles = files.filter(
-        (file) => file.includes("after") && file.endsWith(".csv")
+        (file) =>
+          file.includes("after") && (file.endsWith(".csv") || file.endsWith(".json"))
       );
 
       console.log("Matching files:", matchingFiles);

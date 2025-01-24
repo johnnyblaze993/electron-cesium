@@ -72,27 +72,42 @@ const Test: React.FC = () => {
   };
 
   // Handle file parsing and logging
-  const handleParseFile = async (fileName: string) => {
-    setMessage("");
+  const cleanAndParseJSON = (jsonString: string) => {
     try {
-      const fileContents = await window.electronAPI.readFile(fileName);
-      Papa.parse(fileContents, {
-        header: true,
-        skipEmptyLines: true,
-        complete: (result) => {
-          console.log(`Parsed Data for ${fileName}:`, result.data);
-          setMessage(`File ${fileName} parsed successfully. Check the console for details.`);
-        },
-        error: (error) => {
-          console.error("Error parsing CSV:", error);
-          setMessage(`Failed to parse file: ${fileName}`);
-        },
-      });
+      // Remove trailing commas before brackets
+      const cleanedJson = jsonString
+        .replace(/,\s*}/g, '}') // Remove trailing commas before }
+        .replace(/,\s*]/g, ']'); // Remove trailing commas before ]
+  
+      // Attempt to parse cleaned JSON
+      return JSON.parse(cleanedJson);
     } catch (error) {
-      console.error(`Error reading file ${fileName}:`, error);
-      setMessage(`Failed to read file: ${fileName}`);
+      console.error("Failed to parse cleaned JSON:", error);
+      throw new Error("JSON is malformed and could not be repaired.");
     }
   };
+  
+  // Example usage in your handleParseFile function:
+  const handleParseFile = async (fileName: string) => {
+    try {
+      const fileContents = await window.electronAPI.readFile(fileName);
+  
+      if (fileName.endsWith('.json')) {
+        try {
+          const jsonData = JSON.parse(fileContents);
+          console.log(`Parsed JSON Data for ${fileName}:`, jsonData);
+        } catch {
+          console.warn(`Malformed JSON detected in ${fileName}. Attempting repair...`);
+          const repairedJson = cleanAndParseJSON(fileContents);
+          console.log(`Repaired and parsed JSON Data for ${fileName}:`, repairedJson);
+        }
+      }
+    } catch (error) {
+      console.error(`Error reading file ${fileName}:`, error);
+    }
+  };
+  
+  
 
   return (
     <div
