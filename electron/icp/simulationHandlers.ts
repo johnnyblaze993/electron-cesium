@@ -48,26 +48,23 @@ export function setupSimulationHandlers() {
 
   // Handle clearing simulation output files
   ipcMain.handle("clear-sim-output-files", async () => {
-    return new Promise((resolve, reject) => {
-      try {
-        if (fs.existsSync(outputDir)) {
-          // Read all files in the directory
-          const files = fs.readdirSync(outputDir);
-
-          // Delete each file
-          files.forEach((file) => {
-            const filePath = path.join(outputDir, file);
-            fs.unlinkSync(filePath); // Remove the file
-          });
-
-          console.log(`Cleared all files in ${outputDir}`);
-        }
-        resolve(true);
-      } catch (err) {
-        console.error(`Failed to clear simOutputFiles: ${err}`);
-        reject(err);
+    try {
+      if (fs.existsSync(outputDir)) {
+        const files = fs.readdirSync(outputDir);
+  
+        // Delete each file
+        files.forEach((file) => {
+          const filePath = path.join(outputDir, file);
+          fs.unlinkSync(filePath); // Remove the file
+        });
+  
+        console.log(`Cleared all files in ${outputDir}`);
       }
-    });
+      return { success: true }; // Explicitly return success
+    } catch (err) {
+      console.error(`Failed to clear simOutputFiles: ${err}`);
+      throw new Error("Failed to clear simOutputFiles directory.");
+    }
   });
 
   // Helper function to move simulation output files to `simOutputFiles`
