@@ -97,17 +97,20 @@ const TestSimulations = () => {
 
     return (
         <Box sx={{
-            padding: "2%",
-            width: "90vw",
             display: "flex",
             flexDirection: "column",
+            height: "100vh",
+            width: "100vw",
+            alignItems: "center",
+            justifyContent: "center",
             
         }}>
             <DrawerMenu />
             <Box sx={{
                 display: "flex",
                 flexDirection: "column",
-                width: "100%",
+                width: "50%",
+                
             }}>
             <Typography variant="h5">{t("testSimulations")}</Typography>
             <DynamicButton
@@ -125,20 +128,31 @@ const TestSimulations = () => {
                 sx={{ marginBottom: "10px" }}
             />
             </Box>
-            <div>
+            <div style={{
+                padding: "20px",
+                textAlign: "center",
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+            }}>
                 {files.length > 0 && (
                     <Box sx={{ marginTop: 4,
                         display: "flex",
                         flexDirection: "column",
+                        width: "50%",
                      }}>
-                        <Typography variant="h5">{t("matchingFiles")}</Typography>
+                        <Typography sx={{
+                            width: "100%",
+                            textAlign: "left",
+                        }} variant="h5">{t("matchingFiles")}</Typography>
                         {files.map((file, index) => (
                             <Button
                                 key={index}
                                 variant="contained"
                                 color="primary"
                                 onClick={() => handleParseFile(file)}
-                                sx={{ margin: 1 }}
+                                sx={{marginBottom: "10px",}}
                             >
                                 {file}
                             </Button>

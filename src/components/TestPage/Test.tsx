@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const handleTestEndpointCall = async () => {
   try {
-    const response = await (window as any).electronAPI.callTestEndpoint(); 
+    const response = await (window as any).electronAPI.callTestEndpoint();
     console.log("Response from /electronTestEndpoint:", response);
     alert(`Response: ${response}`);
   } catch (error) {
@@ -28,14 +28,11 @@ const Test: React.FC = () => {
         flexDirection: "column",
         height: "100vh",
         width: "100vw",
-        overflow: "hidden",
         alignItems: "center",
       }}
     >
-      {/* DrawerMenu is now shared */}
       <DrawerMenu />
 
-      {/* Main content for Test page */}
       <div style={{ padding: "20px", textAlign: "center" }}>
         <h1>{t("testPage")}</h1>
         <p>{t("thisIsTheTestCompWithDrawer")}</p>
@@ -43,18 +40,23 @@ const Test: React.FC = () => {
       <DynamicButton
         label="Go to Menu Tree Parameter Groups"
         onClick={() => navigate("/menu-tree-parameter-groups")}
-        sx={{ marginBottom: "10px" }}
+        sx={{
+          marginBottom: "10px",
+          width: "50%",
+        }}
       />
       <DynamicButton
         label="Test Electron Endpoint"
         onClick={() => handleTestEndpointCall()}
-        sx={{ marginBottom: "10px" }}
+        sx={{ marginBottom: "10px",
+          width: "50%", }}
       />
-      
+
       <DynamicButton
         label="Go to Test Simulations"
         onClick={() => navigate("/test-simulations")}
-        sx={{ marginBottom: "10px" }}
+        sx={{ marginBottom: "10px",
+          width: "50%", }}
       />
 
     </div>
