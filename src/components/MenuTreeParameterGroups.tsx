@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import DrawerMenu from './DrawerMenu';
 
 const MenuTreeParameterGroups = () => {
   const isMobile = useMediaQuery({ maxWidth: 768 });
@@ -105,49 +106,51 @@ const MenuTreeParameterGroups = () => {
           field.options
             ? renderRadio(section, field.field, field.label, field.description, field.options)
             : renderInput(
-                section,
-                field.field,
-                field.label,
-                field.type,
-                field.description,
-                field.placeholder || ''
-              )
+              section,
+              field.field,
+              field.label,
+              field.type,
+              field.description,
+              field.placeholder || ''
+            )
         )}
       </div>
     </div>
   );
 
   return (
-    <form style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
-      {renderSection('sensors', '1. Sensors Object Class', [
-        { field: 'scanRate', label: 'Scan Rate', type: 'float', description: 'Time for one complete maximum azimuth/elevation scan', placeholder: 'Seconds' },
-        { field: 'startingAzimuth', label: 'Starting Azimuth', type: 'float', description: 'Starting azimuth angle of scanning', placeholder: 'Degrees' },
-        { field: 'endingAzimuth', label: 'Ending Azimuth', type: 'float', description: 'Ending azimuth angle of scanning', placeholder: 'Degrees' },
-        { field: 'lowerElevation', label: 'Lower Elevation', type: 'float', description: 'Lower elevation angle of scanning', placeholder: 'Degrees' },
-        { field: 'upperElevation', label: 'Upper Elevation', type: 'float', description: 'Upper elevation angle of scanning', placeholder: 'Degrees' },
-        { field: 'minimumRange', label: 'Minimum Range', type: 'float', description: 'Minimum range of scanning', placeholder: 'Meters' },
-        { field: 'maximumRange', label: 'Maximum Range', type: 'float', description: 'Maximum range of scanning', placeholder: 'Meters' },
-      ])}
-      {renderSection('fixedWeapons', '2. Fixed Weapon Object Class', [
-        { field: 'azimuthLimitLeft', label: 'Azimuth Limit Left', type: 'float', description: 'Left limitation of firing', placeholder: 'Degrees' },
-        { field: 'azimuthLimitRight', label: 'Azimuth Limit Right', type: 'float', description: 'Right limitation of firing', placeholder: 'Degrees' },
-        { field: 'lowerElevation', label: 'Lower Elevation', type: 'float', description: 'Lower limit elevation angle of firing', placeholder: 'Degrees' },
-        { field: 'upperElevation', label: 'Upper Elevation', type: 'float', description: 'Upper limit elevation angle of firing', placeholder: 'Degrees' },
-        { field: 'minimumRange', label: 'Minimum Range', type: 'float', description: 'Minimum range (too close)', placeholder: 'Meters' },
-        { field: 'maximumRange', label: 'Maximum Range', type: 'float', description: 'Maximum range of rounds', placeholder: 'Meters' },
-        { field: 'firingRate', label: 'Firing Rate', type: 'int', description: 'Standard rounds of ammo expended per second', placeholder: 'Rounds/sec' },
-        { field: 'maximumSlewRate', label: 'Maximum Slew Rate', type: 'float', description: 'Maximum rate of slewing from original position', placeholder: 'Deg/sec' },
-      ])}
-      {renderSection('uasThreat', '4. UAS Threat Object Class', [
-        { field: 'uasClass', label: 'UAS Class', type: 'int', description: 'UAS class designation (1 - 5)', options: [1, 2, 3, 4, 5] },
-        { field: 'flightVelocity', label: 'Flight Velocity', type: 'float', description: 'Average flight velocity over entire flight', placeholder: 'Meters/sec' },
-        { field: 'minimumRange', label: 'Minimum Range', type: 'float', description: 'Minimum range of drone flight', placeholder: 'Meters' },
-        { field: 'maximumRange', label: 'Maximum Range', type: 'float', description: 'Maximum range of drone flight', placeholder: 'Meters' },
-        { field: 'minimumAltitude', label: 'Minimum Altitude', type: 'float', description: 'Minimum altitude limit of drone flight', placeholder: 'Meters' },
-        { field: 'maximumAltitude', label: 'Maximum Altitude', type: 'float', description: 'Maximum altitude limit of drone flight', placeholder: 'Meters' },
-        { field: 'maximumTurnRate', label: 'Maximum Turn Rate', type: 'float', description: 'Maximum turn rate during corrections', placeholder: 'Deg/sec' },
-      ])}
-    </form>
+    <>
+      <DrawerMenu />
+      <form style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
+        {renderSection('sensors', '1. Sensors Object Class', [
+          { field: 'scanRate', label: 'Scan Rate', type: 'float', description: 'Time for one complete maximum azimuth/elevation scan', placeholder: 'Seconds' },
+          { field: 'startingAzimuth', label: 'Starting Azimuth', type: 'float', description: 'Starting azimuth angle of scanning', placeholder: 'Degrees' },
+          { field: 'endingAzimuth', label: 'Ending Azimuth', type: 'float', description: 'Ending azimuth angle of scanning', placeholder: 'Degrees' },
+          { field: 'lowerElevation', label: 'Lower Elevation', type: 'float', description: 'Lower elevation angle of scanning', placeholder: 'Degrees' },
+          { field: 'upperElevation', label: 'Upper Elevation', type: 'float', description: 'Upper elevation angle of scanning', placeholder: 'Degrees' },
+          { field: 'minimumRange', label: 'Minimum Range', type: 'float', description: 'Minimum range of scanning', placeholder: 'Meters' },
+          { field: 'maximumRange', label: 'Maximum Range', type: 'float', description: 'Maximum range of scanning', placeholder: 'Meters' },
+        ])}
+        {renderSection('fixedWeapons', '2. Fixed Weapon Object Class', [
+          { field: 'azimuthLimitLeft', label: 'Azimuth Limit Left', type: 'float', description: 'Left limitation of firing', placeholder: 'Degrees' },
+          { field: 'azimuthLimitRight', label: 'Azimuth Limit Right', type: 'float', description: 'Right limitation of firing', placeholder: 'Degrees' },
+          { field: 'lowerElevation', label: 'Lower Elevation', type: 'float', description: 'Lower limit elevation angle of firing', placeholder: 'Degrees' },
+          { field: 'upperElevation', label: 'Upper Elevation', type: 'float', description: 'Upper limit elevation angle of firing', placeholder: 'Degrees' },
+          { field: 'minimumRange', label: 'Minimum Range', type: 'float', description: 'Minimum range (too close)', placeholder: 'Meters' },
+          { field: 'maximumRange', label: 'Maximum Range', type: 'float', description: 'Maximum range of rounds', placeholder: 'Meters' },
+          { field: 'firingRate', label: 'Firing Rate', type: 'int', description: 'Standard rounds of ammo expended per second', placeholder: 'Rounds/sec' },
+          { field: 'maximumSlewRate', label: 'Maximum Slew Rate', type: 'float', description: 'Maximum rate of slewing from original position', placeholder: 'Deg/sec' },
+        ])}
+        {renderSection('uasThreat', '4. UAS Threat Object Class', [
+          { field: 'uasClass', label: 'UAS Class', type: 'int', description: 'UAS class designation (1 - 5)', options: [1, 2, 3, 4, 5] },
+          { field: 'flightVelocity', label: 'Flight Velocity', type: 'float', description: 'Average flight velocity over entire flight', placeholder: 'Meters/sec' },
+          { field: 'minimumRange', label: 'Minimum Range', type: 'float', description: 'Minimum range of drone flight', placeholder: 'Meters' },
+          { field: 'maximumRange', label: 'Maximum Range', type: 'float', description: 'Maximum range of drone flight', placeholder: 'Meters' },
+          { field: 'minimumAltitude', label: 'Minimum Altitude', type: 'float', description: 'Minimum altitude limit of drone flight', placeholder: 'Meters' },
+          { field: 'maximumAltitude', label: 'Maximum Altitude', type: 'float', description: 'Maximum altitude limit of drone flight', placeholder: 'Meters' },
+          { field: 'maximumTurnRate', label: 'Maximum Turn Rate', type: 'float', description: 'Maximum turn rate during corrections', placeholder: 'Deg/sec' },
+        ])}
+      </form></>
   );
 };
 
