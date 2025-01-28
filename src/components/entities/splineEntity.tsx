@@ -1,13 +1,12 @@
-
 // @ts-nocheck
 // SplineEntity.tsx
 import React, { useMemo } from "react";
-import { Entity, PointGraphics, PolylineGraphics } from "resium";
+import { Entity, PolylineGraphics } from "resium";
 import { CatmullRomSpline, Cartesian3, Color } from "cesium";
 import { huntsvillePoints } from "../../huntsvillePoints";
 
 const SplineEntity: React.FC = () => {
-  const { splinePositions, visiblePoints } = useMemo(() => {
+  const lineSegments = useMemo(() => {
     // Filter points that are visible
     const visiblePoints = huntsvillePoints.filter((point) => point.visible);
 
@@ -16,50 +15,27 @@ const SplineEntity: React.FC = () => {
       Cartesian3.fromDegrees(point.longitude, point.latitude, point.altitude)
     );
 
-    // Generate times array
-    const times = cartesianPoints.map((_, index) => index);
-
-    // Create Catmull-Rom spline
-    const spline = new CatmullRomSpline({
-      times,
-      points: cartesianPoints,
-    });
-
-    // Generate positions along the spline
-    const splinePositions = [];
-    const numSamples = 200; // Smoother spline
-
-    for (let i = 0; i <= numSamples; i++) {
-      const t = (i / numSamples) * (times[times.length - 1] - times[0]);
-      splinePositions.push(spline.evaluate(t));
+    // Create line segments with colors based on acquired state
+    const segments = [];
+    for (let i = 0; i < cartesianPoints.length - 1; i++) {
+      segments.push({
+        start: cartesianPoints[i],
+        end: cartesianPoints[i + 1],
+        color: visiblePoints[i].acquired ? Color.GREEN : Color.RED, // Green for acquired, Red otherwise
+      });
     }
 
-    return { splinePositions, visiblePoints };
+    return segments;
   }, []);
 
   return (
     <>
-      {/* Render the spline */}
-      <Entity>
-        <PolylineGraphics
-          positions={splinePositions}
-          material={Color.YELLOW}
-          width={5}
-        />
-      </Entity>
-
-      {/* Render visible points */}
-      {visiblePoints.map((point, index) => (
-        <Entity
-          key={index}
-          position={Cartesian3.fromDegrees(point.longitude, point.latitude, point.altitude)}
-          name={`Point ${index + 1}`}
-        >
-          <PointGraphics
-            pixelSize={12}
-            color={point.acquired ? Color.GREEN : Color.RED} // Green for acquired, red otherwise
-            outlineColor={Color.WHITE}
-            outlineWidth={2}
+      {lineSegments.map((segment, index) => (
+        <Entity key={index}>
+          <PolylineGraphics
+            positions={[segment.start, segment.end]} // Line segment start and end
+            material={segment.color} // Color based on acquired state
+            width={5}
           />
         </Entity>
       ))}
