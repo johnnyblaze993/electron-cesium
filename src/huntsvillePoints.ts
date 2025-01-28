@@ -6,7 +6,7 @@ export const huntsvillePoints = [
     { longitude: -86.5849, latitude: 34.7320, altitude: 260, visible: true, acquired: false },
     { longitude: -86.5843, latitude: 34.7328, altitude: 265, visible: true, acquired: false },
     { longitude: -86.5837, latitude: 34.7336, altitude: 270, visible: true, acquired: false },
-    { longitude: -86.5831, latitude: 34.7344, altitude: 275, visible: true, acquired: false },
+    { longitude: -86.5831, latitude: 34.7344, altitude: 775, visible: true, acquired: false },
     { longitude: -86.5825, latitude: 34.7352, altitude: 280, visible: true, acquired: false },
     { longitude: -86.5819, latitude: 34.7360, altitude: 285, visible: true, acquired: false },
     { longitude: -86.5813, latitude: 34.7368, altitude: 290, visible: false, acquired: false },
