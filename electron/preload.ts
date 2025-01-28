@@ -13,11 +13,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onLanguageUpdate: (callback: (language: string) => void) =>
     ipcRenderer.on('update-language', (_event, language) => callback(language)),
   callTestEndpoint: () => ipcRenderer.invoke('call-test-endpoint'),
-  runSimulationExe: () => ipcRenderer.invoke("run-simulation-exe"),
+  getMatchingFiles: () => ipcRenderer.invoke("get-matching-files"),
+  getSimulations: () => ipcRenderer.invoke("get-simulations"), // Fetch simulations
+  runSimulationExe: (fileName: any) => ipcRenderer.invoke("run-simulation-exe", fileName), // Run selected simulation
   clearSimOutputFiles: () => ipcRenderer.invoke("clear-sim-output-files"),
-  getMatchingFiles: async () => {
-    console.log("getMatchingFiles called"); // Debugging log
-    return ipcRenderer.invoke("get-matching-files");
-  },
   readFile: (fileName: any) => ipcRenderer.invoke("read-file", fileName),
+
 });

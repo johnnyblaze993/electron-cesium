@@ -1,66 +1,72 @@
 //@ts-nocheck
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Button, Typography, Box } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useSimulationStore } from "../../stores/simulationStore"; // Import the store
 import DrawerMenu from "../DrawerMenu";
-import DynamicButton from "../DynamicButton";
+import { useSimulationStore } from "../../stores/simulationStore"; // Zustand store
 import Papa from "papaparse";
 
 const TestSimulations = () => {
-    const [isLoadingExe, setIsLoadingExe] = useState(false);
-    const [isLoadingClear, setIsLoadingClear] = useState(false);
-    const { files, message, setFiles, clearFiles, setMessage, refreshFiles } = useSimulationStore(); // Use Zustand store
-    const navigate = useNavigate();
-    const { t } = useTranslation();
+  const [isLoadingExe, setIsLoadingExe] = useState(false);
+  const [isLoadingClear, setIsLoadingClear] = useState(false);
+  const [exeFiles, setExeFiles] = useState([]); // State for .exe files
+  const { files, message, setFiles, clearFiles, setMessage, refreshFiles } = useSimulationStore(); // Use Zustand store
+
   // Fetch matching files on component mount
   useEffect(() => {
     refreshFiles();
+    fetchExeFiles(); // Fetch .exe files dynamically
   }, [refreshFiles]);
 
-  const handleRunSimulationExe = async () => {
+  // Fetch all .exe files from the simulations directory
+  const fetchExeFiles = async () => {
+    try {
+      const simulations = await window.electronAPI.getSimulations(); // Fetch .exe files
+      setExeFiles(simulations);
+    } catch (error) {
+      console.error("Error fetching simulations:", error);
+    }
+  };
+
+  // Handle running a specific simulation
+  const handleRunSimulationExe = async (fileName: string) => {
+    setMessage("");
     setIsLoadingExe(true);
     try {
-      const result = await window.electronAPI.runSimulationExe(); // Run EXE simulation
-      console.log("EXE Simulation Result:", result);
+      const result = await window.electronAPI.runSimulationExe(fileName); // Pass the selected file
+      console.log(`Simulation ${fileName} Result:`, result);
 
       if (result.success) {
-        await refreshFiles(); // Refresh files after simulation completes
+        setMessage(`Simulation ${fileName} completed successfully.`);
+        await refreshFiles(); // Refresh output files after simulation completes
       }
     } catch (error) {
-      console.error("Error running EXE Simulation:", error);
+      console.error(`Error running simulation ${fileName}:`, error);
+      setMessage(`Failed to run simulation: ${fileName}`);
     } finally {
       setIsLoadingExe(false);
     }
   };
 
+  // Handle clearing simulation output files
   const handleClearSimOutputFiles = async () => {
+    setMessage("");
     setIsLoadingClear(true);
     try {
       const result = await window.electronAPI.clearSimOutputFiles();
       if (result.success) {
         clearFiles(); // Clear files in the store
+        setMessage("simOutputFiles directory cleared successfully.");
       }
     } catch (err) {
       console.error("Error clearing sim output files:", err);
+      setMessage("Failed to clear sim output files.");
     } finally {
       setIsLoadingClear(false);
     }
   };
 
-  // Simple console log output of the original file contents
-//   const handleParseFile = async (fileName: string) => {
-//     try {
-//       const fileContents = await window.electronAPI.readFile(fileName);
-//       console.log(`File Contents for ${fileName}:`, fileContents);
-//     } catch (error) {
-//       console.error(`Error reading file ${fileName}:`, error);
-//     }
-//   };
-
-// using PapaParse to parse CSV and format JSON files
-const handleParseFile = async (fileName: string) => {
+  // Parse files for CSV and JSON
+  const handleParseFile = async (fileName: string) => {
     setMessage("");
     try {
       const fileContents = await window.electronAPI.readFile(fileName);
@@ -97,8 +103,7 @@ const handleParseFile = async (fileName: string) => {
       setMessage(`Failed to read file: ${fileName}`);
     }
   };
-  
-  
+
   return (
     <Box
       sx={{
@@ -118,22 +123,24 @@ const handleParseFile = async (fileName: string) => {
           width: "50%",
         }}
       >
-        <Typography variant="h5">{t("testSimulations")}</Typography>
-        <DynamicButton
-          label={isLoadingExe ? "Running EXE Simulation..." : "Run EXE Simulation"}
-          onClick={handleRunSimulationExe}
-          isLoading={isLoadingExe}
-          color="secondary"
-          sx={{ marginBottom: "10px" }}
-        />
-        {files.length > 0 && (
-          <DynamicButton
-            label={isLoadingClear ? "Clearing Directory..." : "Clear simOutputFiles Directory"}
-            onClick={handleClearSimOutputFiles}
-            isLoading={isLoadingClear}
-            color="secondary"
-            sx={{ marginBottom: "10px" }}
-          />
+        <Typography variant="h5">Test Simulations</Typography>
+        <Typography variant="h6" sx={{ marginTop: 2 }}>
+          Available Simulations
+        </Typography>
+        {exeFiles.length > 0 ? (
+          exeFiles.map((file, index) => (
+            <Button
+              key={index}
+              variant="contained"
+              color="primary"
+              onClick={() => handleRunSimulationExe(file)}
+              sx={{ marginBottom: "10px" }}
+            >
+              Run {file}
+            </Button>
+          ))
+        ) : (
+          <Typography>No simulations found.</Typography>
         )}
       </Box>
       <Box
@@ -146,15 +153,7 @@ const handleParseFile = async (fileName: string) => {
       >
         {files.length > 0 ? (
           <>
-            <Typography
-              sx={{
-                width: "100%",
-                textAlign: "left",
-              }}
-              variant="h5"
-            >
-              {t("matchingFiles")}
-            </Typography>
+            <Typography variant="h5">Matching Files</Typography>
             {files.map((file, index) => (
               <Button
                 key={index}
@@ -166,11 +165,27 @@ const handleParseFile = async (fileName: string) => {
                 {file}
               </Button>
             ))}
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleClearSimOutputFiles}
+              disabled={isLoadingClear}
+              sx={{ marginTop: "20px" }}
+            >
+              {isLoadingClear ? "Clearing Directory..." : "Clear simOutputFiles Directory"}
+            </Button>
           </>
         ) : (
           <Typography>No output files found.</Typography>
         )}
       </Box>
+      {message && (
+        <Typography
+          sx={{ marginTop: "10px", color: message.includes("Failed") ? "red" : "green" }}
+        >
+          {message}
+        </Typography>
+      )}
     </Box>
   );
 };

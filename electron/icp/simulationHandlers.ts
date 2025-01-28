@@ -13,38 +13,54 @@ if (!fs.existsSync(outputDir)) {
 }
 
 export function setupSimulationHandlers() {
-  ipcMain.handle("run-simulation-exe", async () => {
+  ipcMain.handle("run-simulation-exe", async (_event, fileName: string) => {
     return new Promise((resolve, reject) => {
-      const exePath = path.join(simulationsPath, "Sim_ex_v1");
-      const process = spawn(exePath, { cwd: simulationsPath }); // Run simulation in the simulations folder
-
+      const exePath = path.join(simulationsPath, fileName); // Use the selected file
+      const process = spawn(exePath, { cwd: simulationsPath }); // Run the selected simulation
+  
       let output = "";
       let errorOutput = "";
-
+  
       process.stdout.on("data", (data) => {
         output += data.toString();
       });
-
+  
       process.stderr.on("data", (data) => {
         errorOutput += data.toString();
       });
-
+  
       process.on("close", (code) => {
         if (code === 0) {
-          console.log("Simulation completed successfully.");
-
-          // Move only simulation output files (exclude .exe and .py files)
+          console.log(`Simulation ${fileName} completed successfully.`);
+  
+          // Move simulation output files
           const movedFiles = moveFilesToOutputDir();
           console.log(`Moved files to ${outputDir}:`, movedFiles);
-
+  
           resolve({ success: true, movedFiles });
         } else {
-          console.error("Simulation failed.", errorOutput);
+          console.error(`Simulation ${fileName} failed:`, errorOutput);
           reject({ success: false, error: errorOutput || "Failed to execute simulation." });
         }
       });
     });
   });
+
+  ipcMain.handle("get-simulations", async () => {
+    try {
+      const files = fs.readdirSync(simulationsPath); // Correct path for .exe files
+  
+      // Filter `.exe` files
+      const exeFiles = files.filter((file) => file.endsWith(".exe"));
+      console.log("Found EXE files:", exeFiles);
+  
+      return exeFiles; // Return the list of .exe files
+    } catch (error) {
+      console.error("Error fetching simulations:", error);
+      throw error;
+    }
+  });
+  
 
   // Handle clearing simulation output files
   ipcMain.handle("clear-sim-output-files", async () => {
