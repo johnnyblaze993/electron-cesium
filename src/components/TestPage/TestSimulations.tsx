@@ -1,17 +1,18 @@
 //@ts-nocheck
 import React, { useEffect, useState } from "react";
-import { Button, Typography, Box } from "@mui/material";
+import { Button, Typography, Box, Snackbar, CircularProgress } from "@mui/material";
 import DrawerMenu from "../DrawerMenu";
 import { useSimulationStore } from "../../stores/simulationStore"; // Zustand store
 import Papa from "papaparse";
 
 const TestSimulations = () => {
-  const [isLoadingExe, setIsLoadingExe] = useState(false);
+  const [isLoadingExe, setIsLoadingExe] = useState(false); // Controls spinner/snackbar
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false); // Snackbar visibility
+  const [currentSimulation, setCurrentSimulation] = useState(""); // Name of the current simulation
   const [isLoadingClear, setIsLoadingClear] = useState(false);
   const [exeFiles, setExeFiles] = useState([]); // State for .exe files
   const { files, message, setFiles, clearFiles, setMessage, refreshFiles } = useSimulationStore(); // Use Zustand store
 
-  // Fetch matching files on component mount
   useEffect(() => {
     refreshFiles();
     fetchExeFiles(); // Fetch .exe files dynamically
@@ -31,6 +32,8 @@ const TestSimulations = () => {
   const handleRunSimulationExe = async (fileName: string) => {
     setMessage("");
     setIsLoadingExe(true);
+    setCurrentSimulation(fileName); // Set current simulation name
+    setIsSnackbarOpen(true); // Open snackbar
     try {
       const result = await window.electronAPI.runSimulationExe(fileName); // Pass the selected file
       console.log(`Simulation ${fileName} Result:`, result);
@@ -44,10 +47,10 @@ const TestSimulations = () => {
       setMessage(`Failed to run simulation: ${fileName}`);
     } finally {
       setIsLoadingExe(false);
+      setIsSnackbarOpen(false); // Close snackbar
     }
   };
 
-  // Handle clearing simulation output files
   const handleClearSimOutputFiles = async () => {
     setMessage("");
     setIsLoadingClear(true);
@@ -65,14 +68,12 @@ const TestSimulations = () => {
     }
   };
 
-  // Parse files for CSV and JSON
   const handleParseFile = async (fileName: string) => {
     setMessage("");
     try {
       const fileContents = await window.electronAPI.readFile(fileName);
 
       if (fileName.endsWith(".csv")) {
-        // Parse CSV with PapaParse
         Papa.parse(fileContents, {
           header: true,
           skipEmptyLines: true,
@@ -135,7 +136,11 @@ const TestSimulations = () => {
               color="primary"
               onClick={() => handleRunSimulationExe(file)}
               sx={{ marginBottom: "10px" }}
+              disabled={isLoadingExe} // Disable other buttons while loading
             >
+              {isLoadingExe && currentSimulation === file ? (
+                <CircularProgress size={24} sx={{ marginRight: 1 }} />
+              ) : null}
               Run {file}
             </Button>
           ))
@@ -186,6 +191,11 @@ const TestSimulations = () => {
           {message}
         </Typography>
       )}
+      <Snackbar
+        open={isSnackbarOpen}
+        message={`Running ${currentSimulation}...`}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      />
     </Box>
   );
 };
