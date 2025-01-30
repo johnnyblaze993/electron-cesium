@@ -1,9 +1,9 @@
-// DomeEntity.tsx
+// RadarSweepEntity.tsx
 import React from "react";
 import { Entity, EllipsoidGraphics } from "resium";
 import { Cartesian3, Color, Math as CesiumMath } from "cesium";
 
-const DomeEntity: React.FC = () => {
+const RadarSweepEntity: React.FC = () => {
   const domePosition = Cartesian3.fromDegrees(-86.5861, 34.8204, 0); // Downtown Huntsville
 
   return (
@@ -25,4 +25,4 @@ const DomeEntity: React.FC = () => {
   );
 };
 
-export default DomeEntity;
+export default RadarSweepEntity;

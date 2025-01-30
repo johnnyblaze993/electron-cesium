@@ -1,0 +1,6 @@
+export enum TargetState {
+    VISIBLE = "VISIBLE",
+    ACQUIRED = "ACQUIRED",
+    CAN_BE_ACQUIRED = "CAN_BE_ACQUIRED",
+    DESTROYED = "DESTROYED",
+  }
