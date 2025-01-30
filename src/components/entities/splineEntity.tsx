@@ -1,4 +1,3 @@
-// @ts-nocheck
 // SplineEntity.tsx
 import React, { useMemo } from "react";
 import { Entity, PolylineGraphics } from "resium";
