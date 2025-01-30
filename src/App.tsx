@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 (window as any).CESIUM_BASE_URL = './cesium';
 
 import { useEffect, useRef, useState } from 'react';
@@ -9,27 +9,33 @@ import { terrainProvider } from './cesium/cesiumConfig';
 import UIControls from './components/UIControls';
 import CesiumViewer from './components/CesiumViewer';
 import { Cartesian3 } from 'cesium';
-
+import { Viewer } from 'cesium';
+import React from 'react';
+  
 function App() {
   const { t } = useTranslation();
   const coordinates = useCoordinateStore((state) => state.coordinates) || [];
   const addCoordinate = useCoordinateStore((state) => state.addCoordinate);
   const removeCoordinate = useCoordinateStore((state) => state.removeCoordinate);
   const navigate = useNavigate();
-  const viewerRef = useRef(null);
+
+  const viewerRef = useRef<{ cesiumElement: Viewer | null }>({ cesiumElement: null });
 
 
   // Listen for updates from Electron (when new coordinates are added)
   useEffect(() => {
+        //@ts-ignore
     if (window.electronAPI?.onCoordinatesUpdate) {
+          //@ts-ignore
       window.electronAPI.onCoordinatesUpdate((newCoordinate) => {
         addCoordinate(newCoordinate);
       });
     } else {
       console.warn('electronAPI or onCoordinatesUpdate is not available');
     }
-  
+      //@ts-ignore
     if (window.electronAPI?.onCoordinateDeleted) {
+          //@ts-ignore
       window.electronAPI.onCoordinateDeleted((index: number) => {
         // Update the state to remove the coordinate
         removeCoordinate(index);

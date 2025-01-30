@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 import { create } from "zustand";
 
 interface SimulationStore {
@@ -22,6 +22,7 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
 
   refreshFiles: async () => {
     try {
+            //@ts-ignore
       const matchingFiles = await window.electronAPI.getMatchingFiles();
       set({ files: matchingFiles });
     } catch (error) {

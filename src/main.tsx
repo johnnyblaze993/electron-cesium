@@ -1,5 +1,5 @@
 // src/main.tsx
-//@ts-nocheck
+
 import React, { useEffect } from "react";
 import { StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
@@ -32,14 +32,17 @@ const Main = () => {
     const handleLanguageUpdate = (language: string) => {
       i18n.changeLanguage(language); // Update the i18n language dynamically
     };
-
+    //@ts-ignore
     if (window.electronAPI?.onLanguageUpdate) {
+          //@ts-ignore
       window.electronAPI.onLanguageUpdate(handleLanguageUpdate);
     }
 
     return () => {
       // Clean up listener on unmount
+          //@ts-ignore
       if (window.electronAPI?.onLanguageUpdate) {
+            //@ts-ignore
         window.electronAPI.onLanguageUpdate(() => {});
       }
     };

@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 import React, { useState, useEffect } from 'react';
 import {
   Box,
@@ -36,12 +36,14 @@ const AddCoordinate: React.FC = () => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     addCoordinate(coordinate);
+        //@ts-ignore
     window.electronAPI.sendCoordinates(coordinate);
     setCoordinate({ longitude: '', latitude: '' });
   };
 
   const handleDelete = (index: number) => {
     removeCoordinate(index);
+        //@ts-ignore
     window.electronAPI.deleteCoordinate(index); // Notify Electron
   };
 
@@ -50,9 +52,11 @@ const AddCoordinate: React.FC = () => {
       removeCoordinate(index);
     };
   
+        //@ts-ignore
     window.electronAPI.onCoordinateDeleted(handleCoordinateDeleted);
   
     return () => {
+          //@ts-ignore
       window.electronAPI.onCoordinateDeleted(handleCoordinateDeleted);
     };
   }, []);

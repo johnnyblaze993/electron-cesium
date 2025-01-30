@@ -1,8 +1,10 @@
+
 import React from "react";
 import { useTranslation } from "react-i18next";
 
 declare global {
   interface Window {
+    //@ts-ignore
     electronAPI?: {
       setLanguage: (language: string) => void;
     };

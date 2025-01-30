@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 import React, { useEffect, useState } from "react";
 import { Button, Typography, Box, Snackbar, CircularProgress } from "@mui/material";
 import DrawerMenu from "../DrawerMenu";
@@ -21,6 +21,7 @@ const TestSimulations = () => {
   // Fetch all .exe files from the simulations directory
   const fetchExeFiles = async () => {
     try {
+            //@ts-ignore
       const simulations = await window.electronAPI.getSimulations(); // Fetch .exe files
       setExeFiles(simulations);
     } catch (error) {
@@ -35,6 +36,7 @@ const TestSimulations = () => {
     setCurrentSimulation(fileName); // Set current simulation name
     setIsSnackbarOpen(true); // Open snackbar
     try {
+            //@ts-ignore
       const result = await window.electronAPI.runSimulationExe(fileName); // Pass the selected file
       console.log(`Simulation ${fileName} Result:`, result);
 
@@ -55,6 +57,7 @@ const TestSimulations = () => {
     setMessage("");
     setIsLoadingClear(true);
     try {
+            //@ts-ignore
       const result = await window.electronAPI.clearSimOutputFiles();
       if (result.success) {
         clearFiles(); // Clear files in the store
@@ -71,6 +74,7 @@ const TestSimulations = () => {
   const handleParseFile = async (fileName: string) => {
     setMessage("");
     try {
+            //@ts-ignore
       const fileContents = await window.electronAPI.readFile(fileName);
 
       if (fileName.endsWith(".csv")) {
