@@ -1,5 +1,5 @@
 // src/coordinateStore.ts
-// @ts-nocheck
+
 import { create } from 'zustand';
 
 interface Coordinate {
