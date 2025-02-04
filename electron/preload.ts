@@ -4,6 +4,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('electronAPI', {
   openTestWindow: (language: string) => ipcRenderer.send("open-test-window", language),
+  setWindowOpacity: (opacity: number) => ipcRenderer.send("set-window-opacity", opacity),
   sendCoordinates: (coordinates: any) => ipcRenderer.send('send-coordinates', coordinates),
   deleteCoordinate: (index: number) => ipcRenderer.send("delete-coordinate", index),
   onCoordinateDeleted: (callback: (index: number) => void) =>

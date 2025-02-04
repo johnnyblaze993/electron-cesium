@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import { createTestWindow } from "../windows/testWindow";
+import { createTestWindow, getTestWindows} from "../windows/testWindow";
 import axios from "axios";
 
 //endpoint: 'http://localhost:8080/electronTestEndpoint'
@@ -20,4 +20,14 @@ export function setupTestWindowHandlers() {
       throw error; // Throw the error to be caught by the renderer
     }
   });
+
+    // ✅ Handle opacity changes from renderer process
+    ipcMain.on("set-window-opacity", (_event, opacity: number) => {
+      console.log(`IPC Event: set-window-opacity received with value ${opacity}`);
+      getTestWindows().forEach((win) => {
+        if (!win.isDestroyed()) {
+          win.setOpacity(opacity);
+        }
+      });
+    });
 }
