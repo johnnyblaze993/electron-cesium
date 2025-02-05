@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Button, Typography, Box, Snackbar, CircularProgress } from "@mui/material";
-import DrawerMenu from "../DrawerMenu";
+import DrawerMenu from "../../components/DrawerMenu";
 import { useSimulationStore } from "../../stores/simulationStore"; // Zustand store
 import Papa from "papaparse";
 

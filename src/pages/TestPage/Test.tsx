@@ -1,11 +1,11 @@
 
 
 import React from "react";
-import DrawerMenu from "../DrawerMenu"; // Import the DrawerMenu component
+import DrawerMenu from "../../components/DrawerMenu"; // Import the DrawerMenu component
 import { useTranslation } from "react-i18next";
-import DynamicButton from "../DynamicButton"; // Import the DynamicButton component
+import DynamicButton from "../../components/DynamicButton"; // Import the DynamicButton component
 import { useNavigate } from "react-router-dom";
-import OpacitySlider from "../OpacitySlider";
+import OpacitySlider from "../../components/OpacitySlider";
 
 const handleTestEndpointCall = async () => {
   try {
