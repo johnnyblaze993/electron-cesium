@@ -10,8 +10,8 @@ const DomeEntity: React.FC = () => {
       position={Cartesian3.fromDegrees(-86.7816, 36.1627, 0)} // Nashville, TN (Ground level)
     >
       <EllipsoidGraphics
-        radii={new Cartesian3(500, 500, 250)} // Full dome shape
-        material={Color.LIGHTBLUE.withAlpha(0.5)} // Light blue, semi-transparent
+        radii={new Cartesian3(9000, 9000, 950)} // Full dome shape
+        material={Color.BLUEVIOLET.withAlpha(0.5)} // Light blue, semi-transparent
       />
     </Entity>
   );
