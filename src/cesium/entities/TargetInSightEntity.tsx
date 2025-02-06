@@ -3,48 +3,46 @@ import React, { useEffect, useState } from "react";
 import { Entity, EllipsoidGraphics, useCesium } from "resium";
 import { Cartesian3, Cartographic, Color, Math as CesiumMath, JulianDate } from "cesium";
 
-const DOME_POSITION = Cartesian3.fromDegrees(-86.7816, 36.1627, 0); // Nashville, TN
-const DOME_RADIUS = 500; // Radius in meters
+const DOME_POSITION = Cartesian3.fromDegrees(-86.7816, 36.1627, 0); // Nashville Dome
+const DOME_RADIUS = 9000; // Radius in meters (matches dome entity)
 
 const TargetInSightEntity: React.FC = () => {
   const { viewer } = useCesium();
   const [position, setPosition] = useState(
-    Cartesian3.fromDegrees(-86.7840, 36.1627, 2000) // Start far left of dome
+    Cartesian3.fromDegrees(-86.79, 36.1627, 2000) // Start slightly left of the dome
   );
-  const [orbColor, setOrbColor] = useState(Color.WHITE); // Start white
-  const [direction, setDirection] = useState(1); // Moving right
+  const [orbColor, setOrbColor] = useState(Color.WHITE);
   const [colorKey, setColorKey] = useState(0); // 🔑 Force re-render on color change
 
   useEffect(() => {
     if (!viewer) return;
 
     viewer.clock.shouldAnimate = true;
-    viewer.clock.multiplier = 5; // Simulation speed
+    viewer.clock.multiplier = 5; // Cesium time controls speed
 
     const interval = setInterval(() => {
-      const speedFactor = viewer.clock.multiplier * 0.00002; // Adjust speed
+      const currentTime = viewer.clock.currentTime;
+      const speedFactor = viewer.clock.multiplier * 0.0001; // Controlled by Cesium time
 
       setPosition((prevPos) => {
         const carto = Cartographic.fromCartesian(prevPos);
-        let newLongitude = CesiumMath.toDegrees(carto.longitude) + direction * speedFactor;
+        let newLongitude = CesiumMath.toDegrees(carto.longitude) + speedFactor;
 
-        // Stop movement when reaching the dome
-        if (newLongitude >= -86.7816) {
-          setDirection(0); // Stop at the dome
-        }
+        // Keep movement within range
+        if (newLongitude > -86.775) newLongitude = -86.79;
 
         const newPos = Cartesian3.fromDegrees(newLongitude, 36.1627, 2000);
 
-        // ✅ Change orb color based on distance from dome
+        // ✅ Distance from dome center
         const distance = Cartesian3.distance(DOME_POSITION, newPos);
         let newColor = Color.WHITE; // Default
 
-        if (distance > DOME_RADIUS * 3) {
+        if (distance > DOME_RADIUS * 1.5) {
           newColor = Color.WHITE; // Far away
-        } else if (distance > DOME_RADIUS * 1.5) {
-          newColor = Color.YELLOW; // Getting closer
+        } else if (distance > DOME_RADIUS * 0.75) {
+          newColor = Color.YELLOW; // Approaching
         } else {
-          newColor = Color.RED; // Right overhead
+          newColor = Color.RED; // Inside the dome area
         }
 
         // ✅ Ensure React detects color change
@@ -58,7 +56,7 @@ const TargetInSightEntity: React.FC = () => {
 
         return newPos;
       });
-    }, 100); // Update every 0.1 seconds
+    }, 100); // Update every 0.1s
 
     return () => clearInterval(interval);
   }, [viewer]);
