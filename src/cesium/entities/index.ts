@@ -4,3 +4,5 @@ export { default as SplineEntity } from "./SplineEntity";
 export { default as RadarSweepEntity} from "./RadarSweepEntity";
 export { default as DomeEntity} from "./DomeEntity";
 export { default as TargetInSightEntity} from "./TargetInSightEntity";
+export { default as DashedLineEntity } from "./DashedLineEntity";
+export { default as RhumbLineEntity } from "./RhumbLineEntity";
