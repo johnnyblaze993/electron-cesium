@@ -1,4 +1,3 @@
-// RadarSweepEntity.tsx
 import React, { useState, useEffect } from "react";
 import { Entity, EllipsoidGraphics } from "resium";
 import { Cartesian3, Color, Math as CesiumMath } from "cesium";
@@ -22,21 +21,39 @@ const RadarSweepEntity: React.FC = () => {
   }, []);
 
   return (
-    <Entity position={domePosition} name="Radar Sweep">
-      <EllipsoidGraphics
-        radii={new Cartesian3(2000.0, 2000.0, 2000.0)} // Outer radii
-        innerRadii={new Cartesian3(500.0, 500.0, 500.0)} // Inner radii (hollow center)
-        minimumCone={CesiumMath.toRadians(60.0)} // Bottom cutoff
-        maximumCone={CesiumMath.toRadians(90.0)} // Top cutoff
-        minimumClock={sweepStart} // Dynamic start position
-        maximumClock={sweepStart + sweepWidth} // Dynamic end position
-        material={Color.YELLOW.withAlpha(0.3)} // Semi-transparent yellow
-        stackPartitions={128} // Vertical slices
-        slicePartitions={36} // Horizontal slices
-        outline={true} // Show outline
-        outlineColor={Color.BLACK} // Black outline
-      />
-    </Entity>
+    <>
+      {/* Background semi-transparent dome for reference */}
+      <Entity position={domePosition} name="Full Dome Outline">
+        <EllipsoidGraphics
+          radii={new Cartesian3(2000.0, 2000.0, 2000.0)}
+          innerRadii={new Cartesian3(500.0, 500.0, 500.0)}
+          minimumCone={CesiumMath.toRadians(60.0)}
+          maximumCone={CesiumMath.toRadians(90.0)}
+          minimumClock={0.0}
+          maximumClock={Math.PI} // Full half-dome
+          material={Color.YELLOW.withAlpha(0.1)} // Light yellow to keep it visible
+          outline={true}
+          outlineColor={Color.BLACK}
+        />
+      </Entity>
+
+      {/* Sweeping animation */}
+      <Entity position={domePosition} name="Radar Sweep">
+        <EllipsoidGraphics
+          radii={new Cartesian3(2000.0, 2000.0, 2000.0)}
+          innerRadii={new Cartesian3(500.0, 500.0, 500.0)}
+          minimumCone={CesiumMath.toRadians(60.0)}
+          maximumCone={CesiumMath.toRadians(90.0)}
+          minimumClock={sweepStart}
+          maximumClock={sweepStart + sweepWidth}
+          material={Color.YELLOW.withAlpha(0.3)} // More opaque for the sweep effect
+          stackPartitions={128}
+          slicePartitions={36}
+          outline={true}
+          outlineColor={Color.BLACK}
+        />
+      </Entity>
+    </>
   );
 };
 
