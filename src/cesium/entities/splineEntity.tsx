@@ -1,8 +1,6 @@
-
-// SplineEntity.tsx
 import React, { useMemo } from "react";
-import { Entity, PolylineGraphics } from "resium";
-import { CatmullRomSpline, Cartesian3, Color } from "cesium";
+import { Entity, PolylineGraphics, PointGraphics } from "resium";
+import { Cartesian3, Color, NearFarScalar } from "cesium";
 import { huntsvillePoints } from "../../huntsvillePoints";
 import { TargetState } from "../../../types/types";
 
@@ -22,13 +20,11 @@ const getDominantState = (states: TargetState[]) => {
     TargetState.CAN_BE_ACQUIRED,
     TargetState.VISIBLE,
   ];
-
   return states.find((state) => priority.includes(state)) || TargetState.VISIBLE;
 };
 
 const SplineEntity: React.FC = () => {
   const lineSegments = useMemo(() => {
-    // Convert points to Cartesian3 and compute velocities
     const pointsWithVelocity = huntsvillePoints.map((point, index, arr) => {
       const position = Cartesian3.fromDegrees(
         point.longitude,
@@ -45,23 +41,20 @@ const SplineEntity: React.FC = () => {
           prev.altitude
         );
 
-        // Compute Euclidean distance between points
         const distance = Cartesian3.distance(prevPosition, position);
-        const timeDiff = point.timestamp - prev.timestamp || 1; // Avoid division by zero
+        const timeDiff = point.timestamp - prev.timestamp || 1;
 
-        velocity = distance / timeDiff; // Velocity in meters per second
+        velocity = distance / timeDiff;
       }
 
       return { ...point, position, velocity };
     });
 
-    // Create line segments
     const segments = [];
     for (let i = 0; i < pointsWithVelocity.length - 1; i++) {
       const startPoint = pointsWithVelocity[i];
       const endPoint = pointsWithVelocity[i + 1];
 
-      // Determine segment color based on dominant state
       const dominantState = getDominantState(startPoint.states);
       const color = stateColors[dominantState];
 
@@ -69,7 +62,7 @@ const SplineEntity: React.FC = () => {
         start: startPoint.position,
         end: endPoint.position,
         color,
-        velocity: startPoint.velocity, // Keep velocity reference for debugging
+        velocity: startPoint.velocity,
       });
     }
 
@@ -78,12 +71,28 @@ const SplineEntity: React.FC = () => {
 
   return (
     <>
+      {/* Draw the spline */}
       {lineSegments.map((segment, index) => (
         <Entity key={index}>
           <PolylineGraphics
             positions={[segment.start, segment.end]}
             material={segment.color}
             width={5}
+          />
+        </Entity>
+      ))}
+
+      {/* Add points with scaling by distance */}
+      {huntsvillePoints.map((point, index) => (
+        <Entity key={`point-${index}`} position={Cartesian3.fromDegrees(point.longitude, point.latitude, point.altitude)}>
+          <PointGraphics
+            pixelSize={10} // Base size
+            color={Color.WHITE}
+            scaleByDistance={new NearFarScalar(1000, 2.0, 10000000, 0.5)} 
+            // Near: at 1000m, scale is 2x (20px)
+            // Far: at 10,000,000m (10,000km), scale is 0.5x (5px)
+            outlineColor={Color.BLACK}
+            outlineWidth={1}
           />
         </Entity>
       ))}
