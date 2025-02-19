@@ -11,6 +11,11 @@ import CesiumViewer from './cesium/CesiumViewer';
 import { Cartesian3 } from 'cesium';
 import { Viewer } from 'cesium';
 import React from 'react';
+
+const TILESETS = {
+  googleTiles: 2275207,
+  osmBuildings: 96188, //does not work
+};
   
 function App() {
   const { t } = useTranslation();
@@ -18,8 +23,8 @@ function App() {
   const addCoordinate = useCoordinateStore((state) => state.addCoordinate);
   const removeCoordinate = useCoordinateStore((state) => state.removeCoordinate);
   const navigate = useNavigate();
-
   const viewerRef = useRef<{ cesiumElement: Viewer | null }>({ cesiumElement: null });
+  const [activeTilesetId, setActiveTilesetId] = useState<number | null>(TILESETS.googleTiles);
 
 
   // Listen for updates from Electron (when new coordinates are added)
@@ -72,9 +77,17 @@ function App() {
 }, [coordinates]);
 
   return (
-    <div style={{ position: 'relative', height: '100vh', width: '100vw' }}>
+    <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
       <UIControls />
-      <CesiumViewer coordinates={coordinates} terrainProvider={terrainProvider} ref={viewerRef} />
+      <div style={{ position: "absolute", top: "50px", left: "10px", zIndex: 100, background: "white", padding: "5px", borderRadius: "5px" }}>
+        <label style={{ marginRight: "5px" }}>Select Tileset:</label>
+        <select onChange={(e) => setActiveTilesetId(Number(e.target.value))} style={{ fontSize: "14px", padding: "5px" }}>
+          <option value={TILESETS.googleTiles}>Google 3D Tiles</option>
+          <option value={TILESETS.osmBuildings}>Cesium OSM Buildings</option>
+        </select>
+      </div>
+      <CesiumViewer terrainProvider={terrainProvider} activeTilesetId={activeTilesetId} 
+      coordinates={coordinates} ref={viewerRef} />
     </div>
   );
 }
