@@ -1,3 +1,12 @@
+# If you just cloned this from github
+  ## install global variables separatly because they do not come through with "npm install"
+  - npm install -g electron
+  - npm install -g concurrently wait-on electron
+
+  ## Cesium Ion key
+  - Create a ".env" file at the root of your project.
+  - Name the key: REACT_APP_CESIUM_ION_ACCESS_TOKEN= <Name of cesium ion token>
+
 # Run app on electron
   ## clear dist and build directories
   - npm run clean
